@@ -31,7 +31,7 @@ def ImputateData(data):
 
   return data
 
-def GetPreprocessedData(path:str , scaled=False, normal_num=120):
+def GetPreprocessedData(path:str , scaled=True, normal_num=120):
  
   data = GetData(path)
   
