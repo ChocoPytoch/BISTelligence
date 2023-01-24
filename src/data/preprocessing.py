@@ -3,6 +3,7 @@
 import pandas as pd
 
 import warnings
+from pandas.core.internals.blocks import putmask_smart
 warnings.filterwarnings(action='ignore')
 
 from sklearn.preprocessing import RobustScaler
@@ -24,17 +25,22 @@ def SetNormalData(data, num):
   return normal_df, normal_index
 
 def ImputateData(data):
+  
   prev_sum=data[data['key']==4].loc[942:981]['Vibration_RMS2'].sum()
   after_sum=data[data['key']==4].loc[983:1022]['Vibration_RMS2'].sum()
   aver=(prev_sum+after_sum)/80
   data.loc[data['Vibration_RMS2']<0,'Vibration_RMS2']=aver
+  
 
   return data
 
-def GetPreprocessedData(path:str , scaled=True, normal_num=120):
+def GetPreprocessedData(path:str , scaled=True, normal_num=120,
+                        key_num=-1):
  
   data = GetData(path)
-  
+  if key_num>=1 and key_num<=6:
+    data = data.loc[data.key==key_num]
+
   data = ImputateData(data)
   normal_df, _ = SetNormalData(data, normal_num)
 

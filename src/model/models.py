@@ -7,7 +7,7 @@ from pyod.models.auto_encoder import AutoEncoder
 from pyod.models.mcd import MCD
 from sklearn.svm import OneClassSVM
 from sklearn.decomposition import PCA
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.mixture import GaussianMixture
 import tensorflow as tf
@@ -16,7 +16,10 @@ from tensorflow.keras import layers,losses,models
 from tensorflow.keras.models import Model, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 
-def MinimumCovarianceDeterminant(train=None,test=None):
+def LR_Model(train=None, test=None):
+  model_lr = LinearRegression()
+
+def MCD_Model(train=None,test=None):
   model_mcd = "MCD"
   model_mcd = MCD(support_fraction=0.8,contamination=0.01,random_state=42)
   model_mcd.fit(train)
@@ -24,7 +27,7 @@ def MinimumCovarianceDeterminant(train=None,test=None):
   sns.scatterplot(test.index,mcd_anomaly_score)
   return model_mcd
 
-def OneClassSVM(train=None,test=None):
+def OCSVM_Model(train=None,test=None):
   model_ocsvm = "OCSVM"
   model_ocsvm = OneClassSVM(nu=0.01)
   model_ocsvm.fit(train)
@@ -32,7 +35,7 @@ def OneClassSVM(train=None,test=None):
   sns.scatterplot(test.index,ocsvm_anomaly_score)
   return model_ocsvm
 
-def LocalOutlierFactor(train=None,test=None):
+def LOF_Model(train=None,test=None):
   model_lof = "LOF"
   model_lof = LocalOutlierFactor(contamination=0.01,novelty=True)
   model_lof.fit(train)
@@ -40,7 +43,7 @@ def LocalOutlierFactor(train=None,test=None):
   sns.scatterplot(test.index,lof_anomaly_score)
   return model_lof
 
-def IsolationForest(train=None,test=None):
+def IForest_Model(train=None,test=None):
   model_iforest = "IForest"
   model_iforest = IForest(contamination=0.01,random_state=42,max_samples=300,n_estimators=200)
   model_iforest.fit(train)
@@ -48,7 +51,7 @@ def IsolationForest(train=None,test=None):
   sns.scatterplot(test.index,isof_anomaly_score)
   return model_iforest
 
-def GausianMixtureModel(train=None,test=None):
+def GM_Model(train=None,test=None):
   model_gmm = "GMM"
   lowest_bic = np.infty
   bic = []
@@ -69,6 +72,6 @@ def GausianMixtureModel(train=None,test=None):
   sns.scatterplot(test.index,gmm_anomaly_score)
   return model_gmm
 
-def AutoEncoder(train=None,test=None):
+def AE_Model(train=None,test=None):
   model = "AE"
   return model
