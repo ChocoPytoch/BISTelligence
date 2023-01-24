@@ -31,11 +31,14 @@ def ImputateData(data):
 
   return data
 
-def GetPreprocessedData(path:str , scaled= True, normal_num=120):
+def GetPreprocessedData(path:str , scaled= True, normal_num=120, key_num = -1):
  
   data = GetData(path)
-  
+      
   data = ImputateData(data)
+
+  if key_num >= 1 and key_num <= 6:
+    data = data.loc[data.key == key_num]
   normal_df, _ = SetNormalData(data, normal_num)
 
   train_data = normal_df.drop(['key'],axis=1)
