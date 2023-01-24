@@ -22,25 +22,25 @@ class BaseModel:
 
   def GetMCD(contamination,random_state):
 
-    model_mcd = MCD(contamination=0.01,random_state=42)
+    model_mcd = MCD(contamination=contamination,random_state=random_state)
 
     return model_mcd
 
   def GetOCSVM(nu):
 
-    model_ocsvm = OneClassSVM(nu=0.01)
+    model_ocsvm = OneClassSVM(nu=nu)
 
     return model_ocsvm
 
   def GetLOF(contamination, novelty):
 
-    model_lof = LocalOutlierFactor(contamination=0.01,novelty=True)
+    model_lof = LocalOutlierFactor(contamination= contamination,novelty= novelty)
 
     return model_lof
 
   def GetIForest(contamination):
     
-    model_iforest = IsolationForest(contamination = 0.01)
+    model_iforest = IsolationForest(contamination = contamination)
 
     return model_iforest
 
@@ -130,7 +130,7 @@ class ModelTrain:
                      'nu':0.01,
                      'novelty':True,
                      'random_state':42,
-                     'n_conponents':1,
+                     'n_components':1,
                      'cv_type':'full',
                      'momentum':0.9,
                      'learning_rate':0.03,
@@ -140,7 +140,7 @@ class ModelTrain:
   def SetTrainer(self, train_data):
     self.train_data = train_data
 
-  def SetParam(self, param_dict={}):
+  def SetParam(self, param_dict):
     self.param_dict.update(param_dict)
 
   def GetTrainedModel(self,model_name="MCD"):
