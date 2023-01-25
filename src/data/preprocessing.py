@@ -46,7 +46,7 @@ def ImputateData(data):
 
   return cp_data
 
-def GetPreprocessedData(path:str , scaled=True, normal_num=70,
+def GetPreprocessedData(path:str , scaled=True, normal_num=120,
                         key_num=-1):
  
   data = GetData(path)
