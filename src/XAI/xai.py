@@ -36,7 +36,7 @@ class XAIModels:
     novelties_df=model_df[model_df['anomaly_score']>threshold]
     novelties_df_index= novelties_df.index
     shap_list = []
-    
+
     if model_name == ['MCD', 'OneClassSVM']:
       explainer = shap.KernelExplainer(self.model.decision_function, self.train_data.head(100).values)
     elif model_name in ['LocalOutlierFactor','GaussianMixture', 'IsolationForest']:
@@ -51,5 +51,4 @@ class XAIModels:
     shap_values_all = pd.DataFrame(data = shap_list)
     shap_values_all.index=novelties_df_index.to_list()
     shap_values_all.columns= self.test_data.columns
-    shap.initjs()
-    shap.summary_plot(shap_values_all.values, shap_values_all.columns, plot_type = "bar")
+    return shap_values_all
