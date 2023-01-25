@@ -28,6 +28,7 @@ class XAIModels:
     self.test_data = test_data
     self.score = score
     self.threshold = threshold
+    model_name = type(self.model).__name__
 
     model_df = self.test_data.copy()
     model_df['anomaly_score']=self.score
@@ -35,9 +36,16 @@ class XAIModels:
     novelties_df=model_df[model_df['anomaly_score']>threshold]
     novelties_df_index= novelties_df.index
     shap_list = []
+    
+    if model_name == ['MCD', 'OneClassSVM']:
+      explainer = shap.KernelExplainer(self.model.decision_function, self.train_data.head(100).values)
+    elif model_name in ['LocalOutlierFactor','GaussianMixture', 'IsolationForest']:
+      explainer = shap.KernelExplainer(self.model.score_samples, self.train_data.head(100).values)
+    else:
+      explainer = shap.KernelExplainer(self.model.predict, self.train_data.head(100).values)
+    
     for idx in novelties_df_index:
       record_to_explain = self.test_data.iloc[idx]
-      explainer = shap.KernelExplainer(self.model.decision_function, self.train_data.head(100).values)
       shap_values = explainer.shap_values(record_to_explain, nsamples='auto')
       shap_list.append(shap_values)
     shap_values_all = pd.DataFrame(data = shap_list)
