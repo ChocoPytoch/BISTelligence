@@ -14,7 +14,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-class XAIModels:
+# class AutoEncoderSHAP:
+
+
+class OtherModelSHAP:
   model = None
   score = None
   train_data=None
@@ -37,13 +40,12 @@ class XAIModels:
     novelties_df_index= novelties_df.index
     shap_list = []
 
-    if model_name == ['MCD', 'OneClassSVM']:
+    if model_name in ['MCD', 'LOF','GMM']:
       explainer = shap.KernelExplainer(self.model.decision_function, self.train_data.head(100).values)
-    elif model_name in ['LocalOutlierFactor','GaussianMixture', 'IsolationForest']:
-      explainer = shap.KernelExplainer(self.model.score_samples, self.train_data.head(100).values)
     else:
-      explainer = shap.KernelExplainer(self.model.predict, self.train_data.head(100).values)
-    
+      raise Exception('Wrong model name or Use AutoEncoderSHAP')
+
+
     for idx in novelties_df_index:
       record_to_explain = self.test_data.iloc[idx]
       shap_values = explainer.shap_values(record_to_explain, nsamples='auto')
