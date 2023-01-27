@@ -299,12 +299,18 @@ class OtherModelSHAP:
   #xai를 구현 시 필요한 파라미터를 적용
   def __init__(self, model):
     self.model=model
+
+  def gmm_score(self, test_data):
+    score = np.abs(np.sum(self.model._estimate_weighted_log_prob(test_data), axis=1))
+    return score
   def novelty_contribution(self, train_data, test_data, score, threshold):
     self.train_data = train_data
     self.test_data = test_data
     self.score = score
     self.threshold = threshold
     model_name = type(self.model).__name__
+    if model_name =='GaussianMixture':
+      model_name = 'GMM'
 
     model_df = self.test_data.copy()
     model_df['anomaly_score']=self.score
@@ -313,8 +319,10 @@ class OtherModelSHAP:
     novelties_df_index= novelties_df.index
     shap_list = []
 
-    if model_name in ['MCD', 'LOF','GMM']:
+    if model_name in ['MCD', 'LOF']:
       explainer = shap.KernelExplainer(self.model.decision_function, self.train_data.head(100).values)
+    elif model_name == 'GMM':
+      explainer = shap.KernelExplainer(self.gmm_score, self.train_data.head(100).values)
     else:
       raise Exception('Wrong model name or Use AutoEncoderSHAP')
 
