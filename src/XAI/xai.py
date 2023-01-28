@@ -38,7 +38,6 @@ class AutoEncoderSHAP:
   reconstruction_error_percent = None
   shap_values_selection = None
   counter = None
-
   def __init__(self, threshold_to_explain=0, reconstruction_error_percent=0.5, shap_values_selection='mean'):
     """
     Args:
@@ -56,7 +55,6 @@ class AutoEncoderSHAP:
     self.threshold_to_explain = threshold_to_explain
     self.reconstruction_error_percent = reconstruction_error_percent
     self.shap_values_selection = shap_values_selection
-
   def get_top_anomaly_to_explain(self, test_data):
     """
     Sort all records in x_explain by their MSE calculated according to their prediction by the trained Autoencoder
@@ -334,4 +332,4 @@ class OtherModelSHAP:
     shap_values_all = pd.DataFrame(data = shap_list)
     shap_values_all.index=novelties_df_index.to_list()
     shap_values_all.columns= self.test_data.columns
-    return shap_values_all
+    return shap_values_all, explainer
