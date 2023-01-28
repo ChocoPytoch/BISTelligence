@@ -5,7 +5,7 @@ import seaborn as sns
 import random
 import os
 from pyod.models.mcd import MCD
-from pyod.models.gmm import GMM
+from sklearn.mixture import GaussianMixture
 from pyod.models.lof import LOF
 from pyod.models.ocsvm import OCSVM
 from pyod.models.iforest import IForest
@@ -38,10 +38,10 @@ class BaseModel:
 
         return model_iforest
 
-    def GetGMM(n_components, cv_type):
-        model_gmm = GMM(
+    def GetGMM(n_components, covariance_type):
+        model_gmm = GaussianMixture(
             n_components=n_components,
-            covariance_type=cv_type
+            covariance_type=covariance_type
         )
         return model_gmm
 
@@ -126,7 +126,7 @@ class ModelTrain:
                            'novelty': True,
                            'random_state': 42,
                            'n_components': 1,
-                           'cv_type': 'full',
+                           'covariance_type': 'full',
                            'momentum': 0.9,
                            'learning_rate': 0.03,
                            'epochs': 100,
@@ -180,7 +180,7 @@ class ModelTrain:
         elif model_name == 'GMM':
             model = BaseModel.GetGMM(
                 self.param_dict['n_components'],
-                self.param_dict['cv_type']
+                self.param_dict['covariance_type']
             )
             model.fit(self.train_data)
 
