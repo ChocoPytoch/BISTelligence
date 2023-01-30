@@ -203,7 +203,7 @@ class ModelTrain:
                 self.train_data, self.train_data,
                 shuffle=True,
                 epochs=self.param_dict['epochs'],
-                batch_size=128,
+                batch_size=14,
                 validation_split=0.3,
                 callbacks=[early_stopping, check_point],
                 verbose=0
