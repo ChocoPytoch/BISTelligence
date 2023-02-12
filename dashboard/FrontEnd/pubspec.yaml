@@ -56,6 +56,8 @@ dependencies:
   firebase_storage: 
   # Use this dependencies for dateformat
   intl: 
+  # Use this dependencies for dropdownbtn
+  dropdown_button2: 
   
 
 dev_dependencies:

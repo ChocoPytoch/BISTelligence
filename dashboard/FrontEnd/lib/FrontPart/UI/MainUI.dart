@@ -5,11 +5,12 @@ import 'dart:ui';
 import 'package:app/BackPart/Get/logshow.dart';
 import 'package:app/BackPart/Get/uisetting.dart';
 import 'package:app/Tools/ContainerDesign.dart';
-import 'package:app/Tools/Variables.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
+import '../../BackPart/Enum/keyitems.dart';
 import '../../BackPart/Firebase/Streams.dart';
 import '../../BackPart/Get/drawing.dart';
 import '../../Tools/MyTheme.dart';
@@ -22,112 +23,61 @@ final logging = Get.put(logshow());
 ///LSUI
 ///
 ///이 레이아웃은 가로모드일 경우 나타나는 UI이다.
-LSUI(context) {
+LSUI(context, int key) {
   double height = GetPlatform.isMobile
       ? Get.height - 70 - Get.statusBarHeight
       : Get.height - 110 - Get.statusBarHeight;
   return SingleChildScrollView(
     physics: const ScrollPhysics(),
     child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: GetPlatform.isWeb
-            ? Row(
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: (height - 20) * 0.7,
-                        width: (Get.width - 60) * 0.6,
-                        child: ShowModelGraph(context, (height - 20) * 0.7,
-                            (Get.width - 60) * 0.6, 'ls'),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: (height - 20) * 0.3,
-                        width: (Get.width - 60) * 0.6,
-                        child: ModelBtn(context, (height - 20) * 0.3,
-                            (Get.width - 40) * 0.6),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: ((height - 20) * 0.5),
-                        width: (Get.width - 60) * 0.4,
-                        child: SummaryModel(context, (height - 20) * 0.5,
-                            (Get.width - 60) * 0.4),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: ((height - 20) * 0.5),
-                        width: (Get.width - 60) * 0.4,
-                        child: ModelSetting(context, ((height - 20) * 0.5),
-                            (Get.width - 60) * 0.4),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            : Row(
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: (height - 20) * 0.8,
-                        width: (Get.width - 60) * 0.6,
-                        child: ShowModelGraph(context, (height - 20) * 0.8,
-                            (Get.width - 60) * 0.6, 'ls'),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: (height - 20) * 0.6,
-                        width: (Get.width - 60) * 0.6,
-                        child: ModelBtn(context, (height - 20) * 0.6,
-                            (Get.width - 40) * 0.6),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: ((height - 20) * 0.7),
-                        width: (Get.width - 60) * 0.4,
-                        child: SummaryModel(context, ((height - 20) * 0.7),
-                            (Get.width - 60) * 0.4),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: ((height - 20) * 0.7),
-                        width: (Get.width - 60) * 0.4,
-                        child: ModelSetting(context, ((height - 20) * 0.7),
-                            (Get.width - 60) * 0.4),
-                      ),
-                    ],
-                  )
-                ],
-              )),
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Get.width > 700 && GetPlatform.isWeb
+          ? Row(
+              children: [
+                SizedBox(
+                  height: (height - 20),
+                  width: (Get.width - 60) * 0.6,
+                  child: ShowModelGraph(context, (height - 20),
+                      (Get.width - 60) * 0.6, 'ls', key),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  height: (height - 20),
+                  width: (Get.width - 60) * 0.4,
+                  child:
+                      ModelLog(context, (height - 20), (Get.width - 60) * 0.4),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                SizedBox(
+                  height: (height - 20) * 1.5,
+                  width: (Get.width - 40),
+                  child: ShowModelGraph(context, (height - 20) * 1.5,
+                      (Get.width - 40), 'ls', key),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: (height - 20) * 0.8,
+                  width: (Get.width - 40),
+                  child:
+                      ModelLog(context, (height - 20) * 0.8, (Get.width - 40)),
+                ),
+              ],
+            ),
+    ),
   );
 }
 
 ///PRUI
 ///
 ///이 레이아웃은 세로모드일 경우 나타나는 UI이다.
-PRUI(context) {
+PRUI(context, int key) {
   double height = GetPlatform.isMobile
       ? Get.height - 70 - Get.statusBarHeight
       : Get.height - 110 - Get.statusBarHeight;
@@ -138,35 +88,18 @@ PRUI(context) {
       child: Column(
         children: [
           SizedBox(
-            height: (height - 40) * 0.6,
+            height: (height - 20) * 0.8,
             width: (Get.width - 40),
             child: ShowModelGraph(
-                context, (height - 40) * 0.6, (Get.width - 40), 'pr'),
+                context, (height - 20) * 0.8, (Get.width - 40), 'ls', key),
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: (height - 40) * 0.4,
-                width: (Get.width - 60) * 0.5,
-                child: SummaryModel(
-                    context, (height - 40) * 0.4, (Get.width - 60) * 0.5),
-              ),
-              const SizedBox(width: 20),
-              SizedBox(
-                height: (height - 40) * 0.4,
-                width: (Get.width - 60) * 0.5,
-                child: ModelSetting(
-                    context, (height - 40) * 0.4, (Get.width - 60) * 0.5),
-              )
-            ],
+          const SizedBox(
+            height: 20,
           ),
-          const SizedBox(height: 20),
           SizedBox(
-            height: (height - 40) * 0.4,
+            height: (height - 20) * 0.6,
             width: (Get.width - 40),
-            child: ModelBtn(context, (height - 40) * 0.4, (Get.width - 40)),
+            child: ModelLog(context, (height - 20) * 0.6, (Get.width - 40)),
           ),
         ],
       ),
@@ -174,20 +107,54 @@ PRUI(context) {
   );
 }
 
-ShowModelGraph(context, maxHeight, maxWidth, orientation) {
+ShowModelGraph(context, maxHeight, maxWidth, orientation, int key) {
+  String? selectedValue;
+
   return ContainerDesign(
     color: MyTheme.chartcolor,
     child: Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(
-                fit: FlexFit.tight,
-                child: Text(
-                  '',
-                  style: MyTheme.bigcontentText,
-                  textAlign: TextAlign.start,
-                )),
+            StatefulBuilder(builder: ((context, setState) {
+              return SizedBox(
+                height: 30,
+                width: 150,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    isExpanded: true,
+                    hint: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text('Key ${uiset.key}',
+                          style: MyTheme.smallcontentText),
+                    ),
+                    items: addDividersAfterItems(),
+                    customItemsHeights: getCustomItemsHeights(),
+                    value: selectedValue,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue = value as String;
+                        uiset.setKey(int.parse(value.toString().substring(3)));
+                      });
+                    },
+                    buttonHeight: 30,
+                    buttonDecoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.black45,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    buttonPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    dropdownMaxHeight: 150,
+                    buttonWidth: 150,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  ),
+                ),
+              );
+            })),
             GetBuilder<uisetting>(builder: (_) {
               return Container(
                 height: 30,
@@ -197,8 +164,13 @@ ShowModelGraph(context, maxHeight, maxWidth, orientation) {
                   onTap: () {
                     StartOrStop();
                   },
-                  child: ContainerDesign(
-                      color: MyTheme.colorwhite,
+                  child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 5, right: 5, top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                        color: MyTheme.colorwhite,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -226,33 +198,114 @@ ShowModelGraph(context, maxHeight, maxWidth, orientation) {
             })
           ],
         ),
-        Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: Center(
-                child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-              }, scrollbars: false),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const ScrollPhysics(),
-                child: Text(
-                  '',
-                  style: MyTheme.bigcontentText,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )),
-          ),
-        )
+        const SizedBox(
+          height: 10,
+        ),
+        GetBuilder<uisetting>(builder: (_) {
+          return Row(
+            children: [
+              SizedBox(
+                  height: uiset.key != key ? maxHeight - 140 : maxHeight - 70,
+                  width: 40,
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(scrollbars: false),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: thresholditems.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            index == 0
+                                ? const SizedBox()
+                                : SizedBox(
+                                    height: uiset.key != key
+                                        ? (maxHeight - 140 - 20 * 11) * 0.05
+                                        : (maxHeight - 70 - 20 * 11) * 0.05,
+                                  ),
+                            SizedBox(
+                              height: 20,
+                              child: Text(
+                                thresholditems[index].toString(),
+                                style: MyTheme.insidecontainerText,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            index == thresholditems.length - 1
+                                ? const SizedBox()
+                                : SizedBox(
+                                    height: uiset.key != key
+                                        ? (maxHeight - 140 - 20 * 11) * 0.05
+                                        : (maxHeight - 70 - 20 * 11) * 0.05,
+                                  ),
+                          ],
+                        );
+                      },
+                    ),
+                  )),
+              GetBuilder<uisetting>(builder: (_) {
+                return Container(
+                  height: uiset.key != key ? maxHeight - 140 : maxHeight - 70,
+                  width: maxWidth - 60,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.black45,
+                    ),
+                  ),
+                );
+              })
+            ],
+          );
+        }),
+        const SizedBox(
+          height: 10,
+        ),
+        GetBuilder<uisetting>(builder: (_) {
+          return uiset.key != key
+              ? ContainerDesign(
+                  color: draw.backgroundcolor,
+                  child: SizedBox(
+                      height: 50,
+                      width: maxWidth - 20,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                              fit: FlexFit.tight,
+                              child: Text(
+                                '변동사항이 있습니다. 모델에 적용하시겠습니까?',
+                                style: MyTheme.insidecontainerText,
+                                textAlign: TextAlign.start,
+                              )),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              //key값을 tmpkey에 변경값을 적용
+                              uiset.settmpKey(uiset.key);
+                            },
+                            child: Icon(
+                              MaterialIcons.published_with_changes,
+                              size: 20,
+                              color: MyTheme.redcolortext,
+                            ),
+                          )
+                        ],
+                      )))
+              : const SizedBox();
+        }),
       ],
     ),
   );
 }
 
-ModelBtn(context, maxHeight, maxWidth) {
+ModelLog(context, maxHeight, maxWidth) {
   return ContainerDesign(
     color: MyTheme.chartcolor,
     child: Column(
@@ -268,7 +321,7 @@ ModelBtn(context, maxHeight, maxWidth) {
                 )),
             GestureDetector(
               onTap: () {
-                ModelBtnDialog();
+                ModelLogDialog();
               },
               child: Icon(
                 SimpleLineIcons.question,

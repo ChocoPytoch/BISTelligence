@@ -61,11 +61,15 @@ class _MainPageState extends State<MainPage> {
                       fit: FlexFit.tight,
                       child: ScrollConfiguration(
                           behavior: NoBehavior(),
-                          child: OrientationBuilder(
-                            builder: (context, orientation) {
-                              return orientation == Orientation.landscape
-                                  ? LSUI(context)
-                                  : PRUI(context);
+                          child: GetBuilder<uisetting>(
+                            builder: (_) {
+                              return OrientationBuilder(
+                                builder: (context, orientation) {
+                                  return orientation == Orientation.landscape
+                                      ? LSUI(context, uiset.tmpkey)
+                                      : PRUI(context, uiset.tmpkey);
+                                },
+                              );
                             },
                           ))),
                   const SizedBox(

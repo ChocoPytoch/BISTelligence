@@ -6,6 +6,7 @@ class uisetting extends GetxController {
   int pagenumber = 0;
   int summarylistnumber = 0;
   int key = 1;
+  int tmpkey = 1;
   int threshold = 1;
   bool startorstop = false;
 
@@ -45,6 +46,16 @@ class uisetting extends GetxController {
     ///model start/stop 결정
 
     key = what;
+    update();
+    notifyChildrens();
+  }
+
+  void settmpKey(int what) {
+    ///setmodelprocess
+    ///
+    ///model start/stop 결정
+
+    tmpkey = what;
     update();
     notifyChildrens();
   }

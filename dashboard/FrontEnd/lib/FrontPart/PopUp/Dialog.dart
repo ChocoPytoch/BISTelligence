@@ -23,7 +23,7 @@ OSDialog(title, content) {
   );
 }
 
-ModelBtnDialog() {
+ModelLogDialog() {
   Get.dialog(LayoutBuilder(
     builder: (context, constraint) {
       return OSDialog(
