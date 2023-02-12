@@ -14,17 +14,13 @@ import 'Tools/Platform.dart';
 void main() async {
   ///WidgetsFlutterBinding.ensureInitialized()는 firebase를 동기화하기 위해 사용하는데 혹시 사용할 경우가 있을 수 있어 미리 선언
   WidgetsFlutterBinding.ensureInitialized();
-  if (GetPlatform.isWeb) {
-    await Firebase.initializeApp(
-        name: 'Detect System',
-        options: const FirebaseOptions(
-            apiKey: 'AIzaSyAZYwT4HVx0093UsQTY7z168QZjHLQ-qbs',
-            appId: '1:417460115007:web:d2418302bcc6b285b60a8a',
-            messagingSenderId: '417460115007',
-            projectId: 'anomaly-detector-78c11'));
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp(
+      name: 'Detector',
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyAZYwT4HVx0093UsQTY7z168QZjHLQ-qbs',
+          appId: '1:417460115007:web:d2418302bcc6b285b60a8a',
+          messagingSenderId: '417460115007',
+          projectId: 'anomaly-detector-78c11'));
 
   ///Hive.initFlutter()는 사용자 디바이스에 직접 저장되는 sqlite 형식의 저장방식을 선언하는 코드
   ///Hive.openBox('Here name')은 Hive의 박스이름을 지정하는 코드

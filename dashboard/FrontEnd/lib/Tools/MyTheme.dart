@@ -52,7 +52,12 @@ class MyTheme {
       fontSize: 15,
       letterSpacing: 1.2,
       fontWeight: FontWeight.bold);
-
+  static TextStyle WarningsmallText = TextStyle(
+    color: redcolortext,
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1.2,
+  );
   static TextStyle insidesummaryText = TextStyle(
       color: summarytext,
       fontSize: 15,
