@@ -3,12 +3,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:get/get.dart';
 
 var listsummary = [];
 //FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseApp mobilever = Firebase.app('Detector');
-FirebaseApp webver = Firebase.app('Detect System');
-FirebaseFirestore firestore = GetPlatform.isMobile
-    ? FirebaseFirestore.instanceFor(app: mobilever)
-    : FirebaseFirestore.instanceFor(app: webver);
+//FirebaseApp webver = Firebase.app('Detect System');
+FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: mobilever);
