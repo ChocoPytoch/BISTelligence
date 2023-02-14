@@ -1,10 +1,14 @@
 // ignore_for_file: unused_local_variable, must_be_immutable, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'package:app/BackPart/Get/drawing.dart';
+import 'package:app/FrontPart/Route/initialLoading.dart';
 import 'package:app/Tools/ContainerDesign.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../BackPart/Firebase/Streams.dart';
 import '../BackPart/Get/uisetting.dart';
+import '../FrontPart/PopUp/Dialog.dart';
 import 'MyTheme.dart';
 
 class AppBarCustom extends StatelessWidget {
@@ -94,7 +98,69 @@ class AppBarCustom extends StatelessWidget {
                                       )
                                     ],
                                   )
-                                : const SizedBox()
+                                : StreamBuilder<QuerySnapshot>(
+                                    stream: PageViewStreamParent1(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        PageViewRes1_1(snapshot);
+                                        initialLoading();
+                                      }
+                                      return Container(
+                                        height: 30,
+                                        width: 50,
+                                        alignment: Alignment.center,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            StartOrStop();
+                                          },
+                                          child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5,
+                                                  right: 5,
+                                                  top: 5,
+                                                  bottom: 5),
+                                              decoration: BoxDecoration(
+                                                color: MyTheme.iconcolor,
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: MyTheme
+                                                            .redcolortext,
+                                                        shape: BoxShape.circle),
+                                                    width: uiset.startorstop
+                                                        ? 10
+                                                        : 5,
+                                                    height: uiset.startorstop
+                                                        ? 10
+                                                        : 5,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: MyTheme
+                                                            .bluecolortext,
+                                                        shape: BoxShape.circle),
+                                                    width: !uiset.startorstop
+                                                        ? 10
+                                                        : 5,
+                                                    height: !uiset.startorstop
+                                                        ? 10
+                                                        : 5,
+                                                  )
+                                                ],
+                                              )),
+                                        ),
+                                      );
+                                    },
+                                  )
                           ],
                         )),
                       ],
