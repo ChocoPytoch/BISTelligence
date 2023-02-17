@@ -38,28 +38,6 @@ refreshchart(ChartSeriesController? chartSeriesController, String s) {
         uiset.listx += 1;
         modellist.clear();
       } else {
-        if (uiset.auto) {
-          //중단
-          GetProcess('auto-stop');
-          //시행
-          GetProcess('auto-start');
-          if (Hive.box('user_setting').get('startorstop')) {
-            if (uiset.key == 6) {
-              uiset.settmpKey(1);
-              uiset.setKey(1);
-            } else {
-              uiset.key = uiset.key + 1;
-              uiset.settmpKey(uiset.key);
-              uiset.setKey(uiset.key);
-            }
-            uiset.setdefaulty(0.0);
-            uiset.resetinsights();
-            uiset.resetlistx();
-          } else {}
-        } else {
-          //중단
-          GetProcess('notauto-stop');
-        }
         Hive.box('user_setting').put('isfinished', true);
       }
     });

@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           locale: Get.deviceLocale,
           fallbackLocale: const Locale('ko', 'KR'),
           home: const SplashPage(
-            title: 'Anomaly Detector',
+            title: 'Solution',
           ),
         ),
         GetCupertinoApp(
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           locale: Get.deviceLocale,
           fallbackLocale: const Locale('ko', 'KR'),
           home: const SplashPage(
-            title: 'Anomaly Detector',
+            title: 'Solution',
           ),
         ),
         GetMaterialApp(
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           locale: Get.deviceLocale,
           fallbackLocale: const Locale('ko', 'KR'),
           home: const SplashPage(
-            title: 'Anomaly Detector',
+            title: 'Solution',
           ),
         ));
   }

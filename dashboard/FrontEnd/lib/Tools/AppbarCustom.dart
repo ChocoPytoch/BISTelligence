@@ -97,7 +97,8 @@ class AppBarCustom extends StatelessWidget {
                                       )
                                     ],
                                   )
-                                : StreamBuilder<QuerySnapshot>(
+                                : const SizedBox()
+                            /*StreamBuilder<QuerySnapshot>(
                                     stream: PageViewStreamParent1(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -158,7 +159,7 @@ class AppBarCustom extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                  )
+                                  )*/
                           ],
                         )),
                       ],
