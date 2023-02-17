@@ -45,8 +45,6 @@ dependencies:
   hive: 
   hive_flutter: 
   hive_listener: 
-  # Use this dependencies for set color in appbar.
-  status_bar_control:
   # Use this dependencies for get device size
   responsive_sizer:
   # Use this dependencies for firebase connect
@@ -58,6 +56,11 @@ dependencies:
   intl: 
   # Use this dependencies for dropdownbtn
   dropdown_button2: 
+  # Use this dependencies for live chart
+  syncfusion_flutter_charts:
+  syncfusion_flutter_sliders:
+  # Use this dependencies for badge
+  badges: 
   
 
 dev_dependencies:

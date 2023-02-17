@@ -1,19 +1,24 @@
-// ignore_for_file: non_constant_identifier_names, file_names
+// ignore_for_file: non_constant_identifier_names, file_names, import_of_legacy_library_into_null_safe
 
-import 'dart:async';
-import 'dart:ui';
 import 'package:app/BackPart/Get/logshow.dart';
 import 'package:app/BackPart/Get/uisetting.dart';
 import 'package:app/Tools/ContainerDesign.dart';
+import 'package:app/Tools/SnackbarStyle.dart';
+import 'package:app/Tools/Variables.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../../BackPart/Enum/keyitems.dart';
+import '../../BackPart/Enum/modelinsights.dart';
 import '../../BackPart/Firebase/Streams.dart';
 import '../../BackPart/Get/drawing.dart';
 import '../../Tools/MyTheme.dart';
+import '../../Tools/Pressed.dart';
 import '../PopUp/Dialog.dart';
 
 final draw = Get.put(drawing());
@@ -24,50 +29,74 @@ final GlobalKey btnkey = GlobalKey();
 ///LSUI
 ///
 ///이 레이아웃은 가로모드일 경우 나타나는 UI이다.
-LSUI(context, int key) {
+LSUI(
+  context,
+  int key,
+  ScrollController mainscroller,
+  ScrollController logscroller,
+  TextEditingController txtcontroller,
+  FocusNode focusnode,
+) {
   double height = GetPlatform.isMobile
       ? Get.height - 70 - Get.statusBarHeight
       : Get.height - 70;
+  double ratio = height / Get.width;
   return SingleChildScrollView(
     physics: const ScrollPhysics(),
+    controller: mainscroller,
     child: Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-      child: GetPlatform.isWeb
+      child: (GetPlatform.isWeb && Get.width > 500) || (ratio < 1.2)
           ? Row(
               children: [
                 SizedBox(
-                  height: (height - 20),
+                  height: height < 500 ? (height - 20) * 1.5 : (height - 20),
                   width: (Get.width - 60) * 0.6,
-                  child: ShowModelGraph(context, (height - 20),
-                      (Get.width - 60) * 0.6, 'ls', key),
+                  child: ShowModelGraph(
+                    context,
+                    height < 500 ? (height - 20) * 1.5 : (height - 20),
+                    (Get.width - 60) * 0.6,
+                    'ls',
+                    key,
+                    txtcontroller,
+                    focusnode,
+                  ),
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 SizedBox(
-                  height: (height - 20),
+                  height: height < 500 ? (height - 20) * 1.5 : (height - 20),
                   width: (Get.width - 60) * 0.4,
                   child: Column(
                     children: [
                       SizedBox(
-                          height: (height - 40) * 0.6,
+                          height: height < 500
+                              ? ((height - 20) * 1.5 - 20) * 0.6
+                              : ((height - 20) - 20) * 0.6,
                           width: (Get.width - 60) * 0.4,
                           child: SummaryModel(
-                            context,
-                            (height - 40) * 0.6,
-                            (Get.width - 60) * 0.4,
-                          )),
+                              context,
+                              height < 500
+                                  ? ((height - 20) * 1.5 - 20) * 0.6
+                                  : ((height - 20) - 20) * 0.6,
+                              (Get.width - 60) * 0.4,
+                              key)),
                       const SizedBox(
                         height: 20,
                       ),
                       SizedBox(
-                        height: (height - 40) * 0.4,
+                        height: height < 500
+                            ? ((height - 20) * 1.5 - 20) * 0.4
+                            : ((height - 20) - 20) * 0.4,
                         width: (Get.width - 60) * 0.4,
                         child: ModelLog(
-                          context,
-                          (height - 40) * 0.4,
-                          (Get.width - 60) * 0.4,
-                        ),
+                            context,
+                            height < 500
+                                ? ((height - 20) * 1.5 - 20) * 0.4
+                                : ((height - 20) - 20) * 0.4,
+                            (Get.width - 60) * 0.4,
+                            logscroller),
                       ),
                     ],
                   ),
@@ -79,8 +108,15 @@ LSUI(context, int key) {
                 SizedBox(
                   height: (height - 60) * 1.5,
                   width: (Get.width - 40),
-                  child: ShowModelGraph(context, (height - 60) * 1.5,
-                      (Get.width - 40), 'ls', key),
+                  child: ShowModelGraph(
+                    context,
+                    (height - 60) * 1.5,
+                    (Get.width - 40),
+                    'ls',
+                    key,
+                    txtcontroller,
+                    focusnode,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -89,18 +125,15 @@ LSUI(context, int key) {
                     height: (height - 60) * 1.2,
                     width: (Get.width - 40),
                     child: SummaryModel(
-                      context,
-                      (height - 60) * 1.2,
-                      (Get.width - 40),
-                    )),
+                        context, (height - 60) * 1.2, (Get.width - 40), key)),
                 const SizedBox(
                   height: 20,
                 ),
                 SizedBox(
                   height: (height - 60) * 0.8,
                   width: (Get.width - 40),
-                  child:
-                      ModelLog(context, (height - 60) * 0.8, (Get.width - 40)),
+                  child: ModelLog(context, (height - 60) * 0.8,
+                      (Get.width - 40), logscroller),
                 ),
               ],
             ),
@@ -111,23 +144,38 @@ LSUI(context, int key) {
 ///PRUI
 ///
 ///이 레이아웃은 세로모드일 경우 나타나는 UI이다.
-PRUI(context, int key) {
+PRUI(
+  context,
+  int key,
+  ScrollController mainscroller,
+  ScrollController logscroller,
+  TextEditingController txtcontroller,
+  FocusNode focusnode,
+) {
   double height = GetPlatform.isMobile
       ? Get.height - 70 - Get.statusBarHeight
       : Get.height - 70;
   return SingleChildScrollView(
     physics: const ScrollPhysics(),
+    controller: mainscroller,
     child: Padding(
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-        child: Get.height > 700
+        child: Get.height > 500
             ? Column(
                 children: [
                   SizedBox(
                     height: (height - 60) * 0.8,
                     width: (Get.width - 40),
-                    child: ShowModelGraph(context, (height - 60) * 0.8,
-                        (Get.width - 40), 'ls', key),
+                    child: ShowModelGraph(
+                      context,
+                      (height - 60) * 0.8,
+                      (Get.width - 40),
+                      'ls',
+                      key,
+                      txtcontroller,
+                      focusnode,
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
@@ -136,18 +184,15 @@ PRUI(context, int key) {
                       height: (height - 60) * 0.6,
                       width: (Get.width - 40),
                       child: SummaryModel(
-                        context,
-                        (height - 60) * 0.6,
-                        (Get.width - 40),
-                      )),
+                          context, (height - 60) * 0.6, (Get.width - 40), key)),
                   const SizedBox(
                     height: 20,
                   ),
                   SizedBox(
                     height: (height - 60) * 0.4,
                     width: (Get.width - 40),
-                    child: ModelLog(
-                        context, (height - 60) * 0.4, (Get.width - 40)),
+                    child: ModelLog(context, (height - 60) * 0.4,
+                        (Get.width - 40), logscroller),
                   ),
                 ],
               )
@@ -156,8 +201,15 @@ PRUI(context, int key) {
                   SizedBox(
                     height: (height - 60) * 1,
                     width: (Get.width - 40),
-                    child: ShowModelGraph(context, (height - 60) * 1,
-                        (Get.width - 40), 'ls', key),
+                    child: ShowModelGraph(
+                      context,
+                      (height - 60) * 1,
+                      (Get.width - 40),
+                      'ls',
+                      key,
+                      txtcontroller,
+                      focusnode,
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
@@ -166,31 +218,35 @@ PRUI(context, int key) {
                       height: (height - 60) * 0.8,
                       width: (Get.width - 40),
                       child: SummaryModel(
-                        context,
-                        (height - 60) * 0.8,
-                        (Get.width - 40),
-                      )),
+                          context, (height - 60) * 0.8, (Get.width - 40), key)),
                   const SizedBox(
                     height: 20,
                   ),
                   SizedBox(
                     height: (height - 60) * 0.5,
                     width: (Get.width - 40),
-                    child: ModelLog(
-                        context, (height - 60) * 0.5, (Get.width - 40)),
+                    child: ModelLog(context, (height - 60) * 0.5,
+                        (Get.width - 40), logscroller),
                   ),
                 ],
               )),
   );
 }
 
-void showPopupMenu(context, offset) async {
+///showPopupMenu
+///
+///메인보드에서 원인분석 버튼을 누를 경우 나타나는 UI이다.
+showPopupMenu(context, offset) async {
   await showMenu(
     context: context,
     position: RelativeRect.fromLTRB(
         offset.dx, offset.dy, offset.dx + 1, offset.dy + 1),
     items: [
       PopupMenuItem(
+        value: 0,
+        onTap: () {
+          uiset.setdbimgshow('sp');
+        },
         child: Row(
           children: [
             Icon(
@@ -212,6 +268,12 @@ void showPopupMenu(context, offset) async {
         ),
       ),
       PopupMenuItem(
+        value: 1,
+        onTap: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            PlotDialog();
+          });
+        },
         child: Row(
           children: [
             Icon(
@@ -237,28 +299,45 @@ void showPopupMenu(context, offset) async {
   );
 }
 
-ShowModelGraph(context, maxHeight, maxWidth, orientation, int key) {
+///ShowModelGraph
+///
+///메인보드 UI이다.
+ShowModelGraph(
+  context,
+  maxHeight,
+  maxWidth,
+  orientation,
+  int key,
+  TextEditingController txtcontroller,
+  FocusNode focusnode,
+) {
   String? selectedValue;
+  ChartSeriesController? chartSeriesController;
+  var tooltipsinlist = TooltipBehavior(
+      enable: uiset.imgshow == 'fp' || uiset.imgshow == 'pause' ? true : false);
 
-  return ContainerDesign(
-    color: MyTheme.chartcolor,
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            StatefulBuilder(builder: ((context, setState) {
-              return SizedBox(
+  return StatefulBuilder(builder: ((context, setState) {
+    return ContainerDesign(
+      color: MyTheme.chartcolor,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
                 height: 30,
-                width: 100,
+                width: 80,
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton2(
                     isExpanded: true,
                     hint: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text('Key ${uiset.key}',
-                          style: MyTheme.smallcontentText),
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        'Key ${uiset.key}',
+                        style: MyTheme.smallcontentText,
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
                     items: addDividersAfterItems(),
                     customItemsHeights: getCustomItemsHeights(),
@@ -275,169 +354,317 @@ ShowModelGraph(context, maxHeight, maxWidth, orientation, int key) {
                         width: 1,
                         color: Colors.black45,
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    buttonPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    buttonPadding: EdgeInsets.zero,
                     dropdownMaxHeight: 150,
-                    buttonWidth: 100,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    buttonWidth: 80,
+                    itemPadding: EdgeInsets.zero,
                   ),
                 ),
-              );
-            })),
-            GetBuilder<uisetting>(builder: (_) {
-              return GestureDetector(
-                  onTapDown: (details) {
-                    //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
-                    if (uiset.key == key) {
-                      showPopupMenu(context, details.globalPosition);
-                    } else {}
-                  },
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      padding: const EdgeInsets.only(
-                          left: 5, right: 5, top: 5, bottom: 5),
-                      decoration: BoxDecoration(
-                        color: MyTheme.colorwhite,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Ionicons.analytics,
-                            size: 20,
-                            color: MyTheme.bluecolortext,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Flexible(
-                              fit: FlexFit.tight,
-                              child: Text(
-                                '원인분석',
-                                style: uiset.key == key
-                                    ? MyTheme.insidecontainerText
-                                    : MyTheme.smallcontentText,
-                                textAlign: TextAlign.start,
-                              )),
-                        ],
-                      )));
-            })
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        GetBuilder<uisetting>(builder: (_) {
-          return Row(
-            children: [
-              SizedBox(
-                  height: uiset.key != key ? maxHeight - 140 : maxHeight - 70,
-                  width: 40,
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(scrollbars: false),
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: thresholditems.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            index == 0
-                                ? const SizedBox()
-                                : SizedBox(
-                                    height: uiset.key != key
-                                        ? (maxHeight - 140 - 20 * 11) * 0.05
-                                        : (maxHeight - 70 - 20 * 11) * 0.05,
-                                  ),
-                            SizedBox(
-                              height: 20,
-                              child: Text(
-                                thresholditems[index].toString(),
-                                style: MyTheme.insidecontainerText,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            index == thresholditems.length - 1
-                                ? const SizedBox()
-                                : SizedBox(
-                                    height: uiset.key != key
-                                        ? (maxHeight - 140 - 20 * 11) * 0.05
-                                        : (maxHeight - 70 - 20 * 11) * 0.05,
-                                  ),
-                          ],
-                        );
-                      },
-                    ),
-                  )),
-              GetBuilder<uisetting>(builder: (_) {
-                return Container(
-                  height: uiset.key != key ? maxHeight - 140 : maxHeight - 70,
-                  width: maxWidth - 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.black45,
-                    ),
+              ),
+              Row(
+                children: [
+                  GetBuilder<uisetting>(builder: (_) {
+                    return GestureDetector(
+                        onTap: () {
+                          uiset.setautoreload(!uiset.auto);
+                          Snack.snackbars(
+                              context: context,
+                              title: uiset.auto == true
+                                  ? '자동변경 기능이 활성화되었습니다.'
+                                  : '자동변경 기능이 비활성화되었습니다.',
+                              backgroundcolor: uiset.auto == true
+                                  ? MyTheme.bluecolortext
+                                  : MyTheme.redcolortext);
+                        },
+                        child: uiset.auto
+                            ? Icon(
+                                MaterialCommunityIcons.refresh_auto,
+                                size: 30,
+                                color: MyTheme.bluecolortext,
+                              )
+                            : Icon(
+                                MaterialCommunityIcons.refresh_auto,
+                                size: 30,
+                                color: MyTheme.colorblack,
+                              ));
+                  }),
+                  const SizedBox(
+                    width: 10,
                   ),
-                );
-              })
+                  GetBuilder<uisetting>(builder: (_) {
+                    return GestureDetector(
+                        onTapDown: (details) {
+                          //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
+                          if (uiset.key == key) {
+                            showPopupMenu(context, details.globalPosition);
+                          } else {
+                            Snack.snackbars(
+                                context: context,
+                                title: '키값을 변경하는 도중에 분석은 불가합니다!',
+                                backgroundcolor: MyTheme.redcolortext);
+                          }
+                        },
+                        child: uiset.key == key
+                            ? Icon(
+                                SimpleLineIcons.chart,
+                                size: 20,
+                                color: MyTheme.bluecolortext,
+                              )
+                            : Icon(
+                                MaterialIcons.do_not_disturb,
+                                size: 20,
+                                color: MyTheme.redcolortext,
+                              ));
+                  }),
+                ],
+              )
             ],
-          );
-        }),
-        const SizedBox(
-          height: 10,
-        ),
-        GetBuilder<uisetting>(builder: (_) {
-          return uiset.key != key
-              ? ContainerDesign(
-                  color: draw.backgroundcolor,
-                  child: SizedBox(
-                      height: 50,
-                      width: maxWidth - 20,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Column(
+                children: [
+                  GetBuilder<uisetting>(
+                      initState: uiset.key != key ||
+                              (uiset.auto == false &&
+                                  Hive.box('user_setting').get('isfinished') ==
+                                      true) ||
+                              !logging.startorstop
+                          ? refreshchart(chartSeriesController, 'pause')
+                          : refreshchart(chartSeriesController, 'go'),
+                      builder: (_) {
+                        return SizedBox(
+                            height: uiset.key != key ||
+                                    (uiset.auto == false &&
+                                        Hive.box('user_setting')
+                                                .get('isfinished') ==
+                                            true)
+                                ? maxHeight - 140
+                                : maxHeight - 80,
+                            width: 40,
+                            child: SfSlider.vertical(
+                              min: 0.0,
+                              max: uiset.maxy == 0.0 ? 1 : uiset.maxy,
+                              showLabels: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  uiset.defaulty = value;
+                                });
+                              },
+                              onChangeEnd: (value) {
+                                setState(() {
+                                  uiset.defaulty = value;
+                                });
+                              },
+                              value: uiset.defaulty,
+                              interval: uiset.maxy == 0.0 ? 1 : uiset.maxy / 3,
+                              showTicks: true,
+                              showDividers: true,
+                              enableTooltip: true,
+                              minorTicksPerInterval: 5,
+                              tooltipPosition: SliderTooltipPosition.right,
+                            ));
+                      }),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                  height: uiset.key != key ||
+                          (uiset.auto == false &&
+                              Hive.box('user_setting').get('isfinished') ==
+                                  true)
+                      ? maxHeight - 140
+                      : maxHeight - 80,
+                  width: maxWidth - 70,
+                  alignment: Alignment.center,
+                  child: SfCartesianChart(
+                    tooltipBehavior: tooltipsinlist,
+                    primaryXAxis: NumericAxis(
+                        isVisible: true,
+                        autoScrollingMode: AutoScrollingMode.end),
+                    series: <ChartSeries>[
+                      ScatterSeries(
+                          name: 'key${uiset.key}',
+                          dataSource: uiset.modelinsightslist,
+                          markerSettings: const MarkerSettings(
+                              isVisible: true,
+                              height: 5,
+                              width: 5,
+                              shape: DataMarkerType.circle),
+                          pointColorMapper: (data, index) {
+                            return uiset.modelinsightslist[index].y >
+                                    uiset.defaulty
+                                ? Colors.red
+                                : Colors.blue;
+                          },
+                          onRendererCreated: (controller) {
+                            chartSeriesController = controller;
+                          },
+                          onPointTap: (pointInteractionDetails) {
+                            uiset.insightstap.clear();
+                            if (uiset.imgshow == '' || uiset.imgshow == 'sp') {
+                            } else {
+                              uiset.setdbimgshow('fp');
+                              uiset.insightstap.add(modelinsights(
+                                  x: uiset
+                                      .modelinsightslist[
+                                          pointInteractionDetails.pointIndex!]
+                                      .x,
+                                  y: uiset
+                                      .modelinsightslist[
+                                          pointInteractionDetails.pointIndex!]
+                                      .y));
+                            }
+                          },
+                          xValueMapper: ((data, index) {
+                            return uiset.modelinsightslist[index].x;
+                          }),
+                          yValueMapper: ((datum, index) {
+                            return uiset.modelinsightslist[index].y;
+                          })),
+                    ],
+                  ))
+            ],
+          ),
+          GetBuilder<uisetting>(builder: (_) {
+            return uiset.key != key
+                ? Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ContainerDesign(
+                          color: draw.backgroundcolor,
+                          child: SizedBox(
+                              height: 50,
+                              width: maxWidth - 20,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                      fit: FlexFit.tight,
+                                      child: Text(
+                                        Hive.box('user_setting')
+                                                    .get('isclickkeychange') ==
+                                                false
+                                            ? '학습된 이전 모델에서의 분석이 완료되어 자동 적용됩니다.'
+                                            : '변동사항이 있습니다. 다음 모델에 바로 적용하시겠습니까?',
+                                        style: MyTheme.insidecontainerText,
+                                        textAlign: TextAlign.start,
+                                      )),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (Hive.box('user_setting')
+                                              .get('isclickkeychange') ==
+                                          true) {
+                                        //키값을 통해 변경하는 경우
+                                        uiset.settmpKey(uiset.key);
+                                        uiset.setdefaulty(0.0);
+                                        uiset.resetinsights();
+                                        uiset.resetlistx();
+                                        GetProcess('key');
+                                      } else {}
+                                      Hive.box('user_setting')
+                                          .put('isfinished', false);
+                                    },
+                                    child: Hive.box('user_setting')
+                                                .get('isclickkeychange') ==
+                                            false
+                                        ? const SizedBox()
+                                        : Icon(
+                                            MaterialIcons
+                                                .published_with_changes,
+                                            size: 20,
+                                            color: MyTheme.redcolortext,
+                                          ),
+                                  )
+                                ],
+                              )))
+                    ],
+                  )
+                : (uiset.auto == false &&
+                        Hive.box('user_setting').get('isfinished') == true
+                    ? Column(
                         children: [
-                          Flexible(
-                              fit: FlexFit.tight,
-                              child: Text(
-                                '변동사항이 있습니다. 모델에 적용하시겠습니까?',
-                                style: MyTheme.insidecontainerText,
-                                textAlign: TextAlign.start,
-                              )),
                           const SizedBox(
-                            width: 10,
+                            height: 10,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              //key값을 tmpkey에 변경값을 적용
-                              uiset.settmpKey(uiset.key);
-                            },
-                            child: Icon(
-                              MaterialIcons.published_with_changes,
-                              size: 20,
-                              color: MyTheme.redcolortext,
-                            ),
-                          )
+                          ContainerDesign(
+                              color: draw.backgroundcolor,
+                              child: SizedBox(
+                                  height: 50,
+                                  width: maxWidth - 20,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            '다음 모델에 이어서 적용하시겠습니까?',
+                                            style: MyTheme.insidecontainerText,
+                                            textAlign: TextAlign.start,
+                                          )),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          //시행
+                                          GetProcess('notauto-start');
+                                          if (Hive.box('user_setting')
+                                              .get('startorstop')) {
+                                            if (uiset.key == 6) {
+                                              uiset.settmpKey(1);
+                                              uiset.setKey(1);
+                                            } else {
+                                              uiset.key = uiset.key + 1;
+                                              uiset.settmpKey(uiset.key);
+                                              uiset.setKey(uiset.key);
+                                            }
+                                            uiset.setdefaulty(0.0);
+                                            uiset.resetinsights();
+                                            uiset.resetlistx();
+                                          } else {}
+                                          Hive.box('user_setting')
+                                              .put('isfinished', false);
+                                        },
+                                        child: Icon(
+                                          MaterialIcons.published_with_changes,
+                                          size: 20,
+                                          color: MyTheme.redcolortext,
+                                        ),
+                                      )
+                                    ],
+                                  )))
                         ],
-                      )))
-              : const SizedBox();
-        }),
-      ],
-    ),
-  );
+                      )
+                    : const SizedBox());
+          }),
+        ],
+      ),
+    );
+  }));
 }
 
-SummaryModel(context, maxHeight, maxWidth) {
-  //maxWidth가 350이하일 때 이 뷰를 쪼개서 화살표로 뷰 넘기는 액션 선택
+///SummaryModel
+///
+///분석대시보드 UI이다.
+///백엔드에서 이미지를 불러올 때 이곳의 코드 중
+///Imgin으로 이동하여 Text 부분을 Image로 교체하면 된다.
+///uiset.imgshow 변수는 선택값이 summary인지 force인지에 따라 결정되게 하였음.
+///summary => sp, force => fp, default => 공백('')
+SummaryModel(context, maxHeight, maxWidth, int key) {
   return ContainerDesign(
       color: MyTheme.chartcolor,
       child: Column(
@@ -452,16 +679,32 @@ SummaryModel(context, maxHeight, maxWidth) {
                     style: MyTheme.bigcontentText,
                     textAlign: TextAlign.start,
                   )),
+              GestureDetector(
+                onTap: () {
+                  uiset.setdbimgshow('');
+                  print(uiset.imgshow);
+                },
+                child: Icon(
+                  Ionicons.refresh,
+                  size: 20,
+                  color: MyTheme.bluecolortext,
+                ),
+              )
             ],
           ),
           GetBuilder<uisetting>(builder: (_) {
-            return Notin(maxHeight, maxWidth, 'analytic');
+            return uiset.imgshow == 'sp' || uiset.imgshow == 'fp'
+                ? Imgin(maxHeight, maxWidth)
+                : Notin(maxHeight, maxWidth, 'analytic');
           })
         ],
       ));
 }
 
-ModelLog(context, maxHeight, maxWidth) {
+///ModelLog
+///
+///로그대시보드 UI이다.
+ModelLog(context, maxHeight, maxWidth, ScrollController logscroller) {
   return ContainerDesign(
     color: MyTheme.chartcolor,
     child: Column(
@@ -488,8 +731,7 @@ ModelLog(context, maxHeight, maxWidth) {
           ],
         ),
         Container(
-          height: 2,
-          color: Colors.black45,
+          height: 10,
         ),
         StreamBuilder<QuerySnapshot>(
           stream: PageViewStreamParent1(),
@@ -501,10 +743,21 @@ ModelLog(context, maxHeight, maxWidth) {
                   : Flexible(
                       fit: FlexFit.tight,
                       child: SizedBox(
-                        height: maxHeight,
-                        width: maxWidth,
-                        child: ListShowing(maxHeight, maxWidth),
-                      ));
+                          height: maxHeight,
+                          width: maxWidth,
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                                scrollbarTheme: ScrollbarThemeData(
+                                    thumbColor: MaterialStateProperty.all(
+                                        Colors.grey))),
+                            child: Scrollbar(
+                              controller: logscroller,
+                              thumbVisibility: true,
+                              thickness: 3,
+                              child:
+                                  ListShowing(maxHeight, maxWidth, logscroller),
+                            ),
+                          )));
             } else if (!snapshot.hasData) {
               return Notin(maxHeight, maxWidth, 'log');
             }
@@ -519,11 +772,12 @@ ModelLog(context, maxHeight, maxWidth) {
   );
 }
 
-ListShowing(maxHeight, maxWidth) {
+ListShowing(maxHeight, maxWidth, ScrollController logscroller) {
   return ListView.builder(
       physics: const ScrollPhysics(),
       scrollDirection: Axis.vertical,
       shrinkWrap: false,
+      controller: logscroller,
       itemCount: logging.showlist.length,
       itemBuilder: ((context, index) {
         return Column(
@@ -535,20 +789,25 @@ ListShowing(maxHeight, maxWidth) {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Flexible(
-                    fit: FlexFit.tight,
-                    child: Text(
-                      logging.showlist[index].title,
-                      style: logging.showlist[index].title == 'Stop'
-                          ? MyTheme.WarningText
-                          : MyTheme.bigcontentText,
-                    )),
+                Icon(
+                  logging.showlist[index].title == 'Stop'
+                      ? Entypo.controller_stop
+                      : Entypo.controller_play,
+                  size: 20,
+                  color: logging.showlist[index].title == 'Stop'
+                      ? MyTheme.redcolortext
+                      : MyTheme.bluecolortext,
+                ),
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  logging.showlist[index].date,
-                  style: MyTheme.smallcontentText,
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Text(
+                    logging.showlist[index].date,
+                    textAlign: TextAlign.end,
+                    style: MyTheme.smallcontentText,
+                  ),
                 ),
               ],
             ),
@@ -560,31 +819,55 @@ ListShowing(maxHeight, maxWidth) {
       }));
 }
 
+Imgin(maxHeight, maxWidth) {
+  return Flexible(
+      fit: FlexFit.tight,
+      child: Container(
+        width: maxWidth,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: Colors.black45,
+          ),
+        ),
+        child: Text(
+          uiset.imgshow == 'sp'
+              ? '이곳에 Summary Plot이 보여지고 있습니다.'
+              : '이곳에 Force Plot이 보여지고 있습니다. x : ${uiset.insightstap[0].x}, y : ${uiset.insightstap[0].y}',
+          textAlign: TextAlign.center,
+          style: MyTheme.insidecontainerText,
+        ),
+      ));
+}
+
 Notin(maxHeight, maxWidth, string) {
   return Flexible(
       fit: FlexFit.tight,
       child: SizedBox(
-        width: maxWidth * 0.6,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              AntDesign.frowno,
-              color: Colors.orange,
-              size: 30,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Text(
-              string == 'log'
-                  ? '로그가 비어있습니다.'
-                  : '좌측 대시보드의 우측 상단 분석 아이콘을 선택하시면 됩니다.',
-              textAlign: TextAlign.center,
-              style: MyTheme.insidecontainerText,
-            ),
-          ],
+        height: maxHeight,
+        width: maxWidth,
+        child: SingleChildScrollView(
+          physics: const ScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                AntDesign.frowno,
+                color: Colors.orange,
+                size: 30,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                string == 'log' ? '로그가 비어있습니다.' : '메인보드 우측 상단 아이콘을 선택',
+                textAlign: TextAlign.center,
+                style: MyTheme.insidecontainerText,
+              ),
+            ],
+          ),
         ),
       ));
 }

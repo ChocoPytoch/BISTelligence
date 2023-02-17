@@ -1,7 +1,6 @@
 // ignore_for_file: unused_local_variable, must_be_immutable, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'package:app/BackPart/Get/drawing.dart';
-import 'package:app/FrontPart/Route/initialLoading.dart';
 import 'package:app/Tools/ContainerDesign.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +102,6 @@ class AppBarCustom extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         PageViewRes1_1(snapshot);
-                                        initialLoading();
                                       }
                                       return Container(
                                         height: 30,
@@ -133,10 +131,10 @@ class AppBarCustom extends StatelessWidget {
                                                         color: MyTheme
                                                             .redcolortext,
                                                         shape: BoxShape.circle),
-                                                    width: uiset.startorstop
+                                                    width: !logging.startorstop
                                                         ? 10
                                                         : 5,
-                                                    height: uiset.startorstop
+                                                    height: !logging.startorstop
                                                         ? 10
                                                         : 5,
                                                   ),
@@ -148,10 +146,10 @@ class AppBarCustom extends StatelessWidget {
                                                         color: MyTheme
                                                             .bluecolortext,
                                                         shape: BoxShape.circle),
-                                                    width: !uiset.startorstop
+                                                    width: logging.startorstop
                                                         ? 10
                                                         : 5,
-                                                    height: !uiset.startorstop
+                                                    height: logging.startorstop
                                                         ? 10
                                                         : 5,
                                                   )

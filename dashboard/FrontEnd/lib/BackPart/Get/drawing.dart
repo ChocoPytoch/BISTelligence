@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:status_bar_control/status_bar_control.dart';
 
 import '../../Tools/MyTheme.dart';
 
@@ -20,7 +19,6 @@ class drawing extends GetxController {
     } else {
       backgroundcolor = MyTheme.colorblack;
     }
-    StatusBarControl.setColor(backgroundcolor, animated: true);
     update();
     notifyChildrens();
   }

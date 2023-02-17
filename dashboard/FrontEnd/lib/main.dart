@@ -7,12 +7,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:status_bar_control/status_bar_control.dart';
-
 import 'Tools/Platform.dart';
 
 void main() async {
-  ///WidgetsFlutterBinding.ensureInitialized()는 firebase를 동기화하기 위해 사용하는데 혹시 사용할 경우가 있을 수 있어 미리 선언
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       name: 'Detector',
@@ -90,8 +87,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    ///StatusBarControl.setColor(color, animated)를 통해 앱바의 색을 애니메이션 효과와 함께 변경
-    StatusBarControl.setColor(draw.backgroundcolor, animated: true);
     return GetBuilder<drawing>(builder: (_) {
       return Scaffold(
           resizeToAvoidBottomInset: false,

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class MyTheme {
-  static Color colorwhite = Colors.grey.shade300;
+  static Color colorwhite = Colors.grey.shade300.withOpacity(0.3);
   static Color colorblack = Colors.black45;
   static Color chartcolor = Colors.white;
   static Color redcolortext = Colors.redAccent;
