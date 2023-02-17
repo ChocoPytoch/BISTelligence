@@ -72,17 +72,17 @@ LSUI(
                     children: [
                       SizedBox(
                           height: height < 500
-                              ? ((height - 20) * 1.5 - 20) * 0.6
-                              : ((height - 20) - 20) * 0.6,
+                              ? (height - 20) * 1.5
+                              : (height - 20),
                           width: (Get.width - 60) * 0.4,
                           child: SummaryModel(
                               context,
                               height < 500
-                                  ? ((height - 20) * 1.5 - 20) * 0.6
-                                  : ((height - 20) - 20) * 0.6,
+                                  ? (height - 20) * 1.5
+                                  : (height - 20),
                               (Get.width - 60) * 0.4,
                               key)),
-                      const SizedBox(
+                      /*const SizedBox(
                         height: 20,
                       ),
                       SizedBox(
@@ -97,7 +97,7 @@ LSUI(
                                 : ((height - 20) - 20) * 0.4,
                             (Get.width - 60) * 0.4,
                             logscroller),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -106,11 +106,11 @@ LSUI(
           : Column(
               children: [
                 SizedBox(
-                  height: (height - 60) * 1.5,
+                  height: (height - 20) * 1.5,
                   width: (Get.width - 40),
                   child: ShowModelGraph(
                     context,
-                    (height - 60) * 1.5,
+                    (height - 20) * 1.5,
                     (Get.width - 40),
                     'ls',
                     key,
@@ -122,19 +122,19 @@ LSUI(
                   height: 20,
                 ),
                 SizedBox(
-                    height: (height - 60) * 1.2,
+                    height: (height - 20),
                     width: (Get.width - 40),
                     child: SummaryModel(
-                        context, (height - 60) * 1.2, (Get.width - 40), key)),
+                        context, (height - 20), (Get.width - 40), key)),
                 const SizedBox(
-                  height: 20,
+                  height: 50,
                 ),
-                SizedBox(
-                  height: (height - 60) * 0.8,
-                  width: (Get.width - 40),
-                  child: ModelLog(context, (height - 60) * 0.8,
-                      (Get.width - 40), logscroller),
-                ),
+                /*SizedBox(
+                    height: (height - 60) * 0.5,
+                    width: (Get.width - 40),
+                    child: ModelLog(context, (height - 60) * 0.5,
+                        (Get.width - 40), logscroller),
+                  ),*/
               ],
             ),
     ),
@@ -165,11 +165,11 @@ PRUI(
             ? Column(
                 children: [
                   SizedBox(
-                    height: (height - 60) * 0.8,
+                    height: (height - 90) * 1,
                     width: (Get.width - 40),
                     child: ShowModelGraph(
                       context,
-                      (height - 60) * 0.8,
+                      (height - 90) * 1,
                       (Get.width - 40),
                       'ls',
                       key,
@@ -181,29 +181,29 @@ PRUI(
                     height: 20,
                   ),
                   SizedBox(
-                      height: (height - 60) * 0.6,
+                      height: (height - 90) * 0.8,
                       width: (Get.width - 40),
                       child: SummaryModel(
-                          context, (height - 60) * 0.6, (Get.width - 40), key)),
+                          context, (height - 90) * 0.8, (Get.width - 40), key)),
                   const SizedBox(
-                    height: 20,
+                    height: 50,
                   ),
-                  SizedBox(
+                  /*SizedBox(
                     height: (height - 60) * 0.4,
                     width: (Get.width - 40),
                     child: ModelLog(context, (height - 60) * 0.4,
                         (Get.width - 40), logscroller),
-                  ),
+                  ),*/
                 ],
               )
             : Column(
                 children: [
                   SizedBox(
-                    height: (height - 60) * 1,
+                    height: (height - 20) * 1.5,
                     width: (Get.width - 40),
                     child: ShowModelGraph(
                       context,
-                      (height - 60) * 1,
+                      (height - 20) * 1.5,
                       (Get.width - 40),
                       'ls',
                       key,
@@ -215,19 +215,19 @@ PRUI(
                     height: 20,
                   ),
                   SizedBox(
-                      height: (height - 60) * 0.8,
+                      height: (height - 20),
                       width: (Get.width - 40),
                       child: SummaryModel(
-                          context, (height - 60) * 0.8, (Get.width - 40), key)),
+                          context, (height - 20), (Get.width - 40), key)),
                   const SizedBox(
-                    height: 20,
+                    height: 50,
                   ),
-                  SizedBox(
+                  /*SizedBox(
                     height: (height - 60) * 0.5,
                     width: (Get.width - 40),
                     child: ModelLog(context, (height - 60) * 0.5,
                         (Get.width - 40), logscroller),
-                  ),
+                  ),*/
                 ],
               )),
   );
@@ -367,34 +367,6 @@ ShowModelGraph(
                 children: [
                   GetBuilder<uisetting>(builder: (_) {
                     return GestureDetector(
-                        onTap: () {
-                          uiset.setautoreload(!uiset.auto);
-                          Snack.snackbars(
-                              context: context,
-                              title: uiset.auto == true
-                                  ? '자동변경 기능이 활성화되었습니다.'
-                                  : '자동변경 기능이 비활성화되었습니다.',
-                              backgroundcolor: uiset.auto == true
-                                  ? MyTheme.bluecolortext
-                                  : MyTheme.redcolortext);
-                        },
-                        child: uiset.auto
-                            ? Icon(
-                                MaterialCommunityIcons.refresh_auto,
-                                size: 30,
-                                color: MyTheme.bluecolortext,
-                              )
-                            : Icon(
-                                MaterialCommunityIcons.refresh_auto,
-                                size: 30,
-                                color: MyTheme.colorblack,
-                              ));
-                  }),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  GetBuilder<uisetting>(builder: (_) {
-                    return GestureDetector(
                         onTapDown: (details) {
                           //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
                           if (uiset.key == key) {
@@ -431,19 +403,14 @@ ShowModelGraph(
                 children: [
                   GetBuilder<uisetting>(
                       initState: uiset.key != key ||
-                              (uiset.auto == false &&
-                                  Hive.box('user_setting').get('isfinished') ==
-                                      true) ||
+                              Hive.box('user_setting').get('isfinished') ==
+                                  true ||
                               !logging.startorstop
                           ? refreshchart(chartSeriesController, 'pause')
                           : refreshchart(chartSeriesController, 'go'),
                       builder: (_) {
                         return SizedBox(
-                            height: uiset.key != key ||
-                                    (uiset.auto == false &&
-                                        Hive.box('user_setting')
-                                                .get('isfinished') ==
-                                            true)
+                            height: uiset.key != key
                                 ? maxHeight - 140
                                 : maxHeight - 80,
                             width: 40,
@@ -452,14 +419,10 @@ ShowModelGraph(
                               max: uiset.maxy == 0.0 ? 1 : uiset.maxy,
                               showLabels: true,
                               onChanged: (value) {
-                                setState(() {
-                                  uiset.defaulty = value;
-                                });
+                                uiset.setdefaulty(value);
                               },
                               onChangeEnd: (value) {
-                                setState(() {
-                                  uiset.defaulty = value;
-                                });
+                                uiset.setdefaulty(value);
                               },
                               value: uiset.defaulty,
                               interval: uiset.maxy == 0.0 ? 1 : uiset.maxy / 3,
@@ -476,61 +439,121 @@ ShowModelGraph(
                 width: 10,
               ),
               Container(
-                  height: uiset.key != key ||
-                          (uiset.auto == false &&
-                              Hive.box('user_setting').get('isfinished') ==
-                                  true)
-                      ? maxHeight - 140
-                      : maxHeight - 80,
+                  height: uiset.key != key ? maxHeight - 140 : maxHeight - 80,
                   width: maxWidth - 70,
                   alignment: Alignment.center,
-                  child: SfCartesianChart(
-                    tooltipBehavior: tooltipsinlist,
-                    primaryXAxis: NumericAxis(
-                        isVisible: true,
-                        autoScrollingMode: AutoScrollingMode.end),
-                    series: <ChartSeries>[
-                      ScatterSeries(
-                          name: 'key${uiset.key}',
-                          dataSource: uiset.modelinsightslist,
-                          markerSettings: const MarkerSettings(
+                  child: uiset.key != key
+                      ? Stack(
+                          children: [
+                            SfCartesianChart(
+                              tooltipBehavior: tooltipsinlist,
+                              primaryXAxis: NumericAxis(
+                                  isVisible: true,
+                                  autoScrollingMode: AutoScrollingMode.end),
+                              series: <ChartSeries>[
+                                ScatterSeries(
+                                    name: 'key${uiset.key}',
+                                    dataSource: uiset.modelinsightslist,
+                                    markerSettings: const MarkerSettings(
+                                        isVisible: true,
+                                        height: 5,
+                                        width: 5,
+                                        shape: DataMarkerType.circle),
+                                    pointColorMapper: (data, index) {
+                                      return uiset.modelinsightslist[index].y >
+                                              uiset.defaulty
+                                          ? Colors.red
+                                          : Colors.blue;
+                                    },
+                                    onRendererCreated: (controller) {
+                                      chartSeriesController = controller;
+                                    },
+                                    onPointTap: (pointInteractionDetails) {
+                                      uiset.insightstap.clear();
+                                      if (uiset.imgshow == '' ||
+                                          uiset.imgshow == 'sp') {
+                                      } else {
+                                        uiset.setdbimgshow('fp');
+                                        uiset.insightstap.add(modelinsights(
+                                            x: uiset
+                                                .modelinsightslist[
+                                                    pointInteractionDetails
+                                                        .pointIndex!]
+                                                .x,
+                                            y: uiset
+                                                .modelinsightslist[
+                                                    pointInteractionDetails
+                                                        .pointIndex!]
+                                                .y));
+                                      }
+                                    },
+                                    xValueMapper: ((data, index) {
+                                      return uiset.modelinsightslist[index].x;
+                                    }),
+                                    yValueMapper: ((datum, index) {
+                                      return uiset.modelinsightslist[index].y;
+                                    })),
+                              ],
+                            ),
+                            SizedBox(
+                              child: Center(
+                                child: Text('일시중지',
+                                    textAlign: TextAlign.center,
+                                    style: MyTheme.WarningsmallText),
+                              ),
+                            )
+                          ],
+                        )
+                      : SfCartesianChart(
+                          tooltipBehavior: tooltipsinlist,
+                          primaryXAxis: NumericAxis(
                               isVisible: true,
-                              height: 5,
-                              width: 5,
-                              shape: DataMarkerType.circle),
-                          pointColorMapper: (data, index) {
-                            return uiset.modelinsightslist[index].y >
-                                    uiset.defaulty
-                                ? Colors.red
-                                : Colors.blue;
-                          },
-                          onRendererCreated: (controller) {
-                            chartSeriesController = controller;
-                          },
-                          onPointTap: (pointInteractionDetails) {
-                            uiset.insightstap.clear();
-                            if (uiset.imgshow == '' || uiset.imgshow == 'sp') {
-                            } else {
-                              uiset.setdbimgshow('fp');
-                              uiset.insightstap.add(modelinsights(
-                                  x: uiset
-                                      .modelinsightslist[
-                                          pointInteractionDetails.pointIndex!]
-                                      .x,
-                                  y: uiset
-                                      .modelinsightslist[
-                                          pointInteractionDetails.pointIndex!]
-                                      .y));
-                            }
-                          },
-                          xValueMapper: ((data, index) {
-                            return uiset.modelinsightslist[index].x;
-                          }),
-                          yValueMapper: ((datum, index) {
-                            return uiset.modelinsightslist[index].y;
-                          })),
-                    ],
-                  ))
+                              autoScrollingMode: AutoScrollingMode.end),
+                          series: <ChartSeries>[
+                            ScatterSeries(
+                                name: 'key${uiset.key}',
+                                dataSource: uiset.modelinsightslist,
+                                markerSettings: const MarkerSettings(
+                                    isVisible: true,
+                                    height: 5,
+                                    width: 5,
+                                    shape: DataMarkerType.circle),
+                                pointColorMapper: (data, index) {
+                                  return uiset.modelinsightslist[index].y >
+                                          uiset.defaulty
+                                      ? Colors.red
+                                      : Colors.blue;
+                                },
+                                onRendererCreated: (controller) {
+                                  chartSeriesController = controller;
+                                },
+                                onPointTap: (pointInteractionDetails) {
+                                  uiset.insightstap.clear();
+                                  if (uiset.imgshow == '' ||
+                                      uiset.imgshow == 'sp') {
+                                  } else {
+                                    uiset.setdbimgshow('fp');
+                                    uiset.insightstap.add(modelinsights(
+                                        x: uiset
+                                            .modelinsightslist[
+                                                pointInteractionDetails
+                                                    .pointIndex!]
+                                            .x,
+                                        y: uiset
+                                            .modelinsightslist[
+                                                pointInteractionDetails
+                                                    .pointIndex!]
+                                            .y));
+                                  }
+                                },
+                                xValueMapper: ((data, index) {
+                                  return uiset.modelinsightslist[index].x;
+                                }),
+                                yValueMapper: ((datum, index) {
+                                  return uiset.modelinsightslist[index].y;
+                                })),
+                          ],
+                        ))
             ],
           ),
           GetBuilder<uisetting>(builder: (_) {
@@ -551,11 +574,7 @@ ShowModelGraph(
                                   Flexible(
                                       fit: FlexFit.tight,
                                       child: Text(
-                                        Hive.box('user_setting')
-                                                    .get('isclickkeychange') ==
-                                                false
-                                            ? '학습된 이전 모델에서의 분석이 완료되어 자동 적용됩니다.'
-                                            : '변동사항이 있습니다. 다음 모델에 바로 적용하시겠습니까?',
+                                        '변동사항이 있습니다. 바로 적용하시겠습니까?',
                                         style: MyTheme.insidecontainerText,
                                         textAlign: TextAlign.start,
                                       )),
@@ -567,89 +586,29 @@ ShowModelGraph(
                                       if (Hive.box('user_setting')
                                               .get('isclickkeychange') ==
                                           true) {
-                                        //키값을 통해 변경하는 경우
+                                        //중단
+                                        GetProcess('stop');
+                                        //시작
+                                        GetProcess('key');
                                         uiset.settmpKey(uiset.key);
                                         uiset.setdefaulty(0.0);
                                         uiset.resetinsights();
                                         uiset.resetlistx();
-                                        GetProcess('key');
                                       } else {}
                                       Hive.box('user_setting')
                                           .put('isfinished', false);
                                     },
-                                    child: Hive.box('user_setting')
-                                                .get('isclickkeychange') ==
-                                            false
-                                        ? const SizedBox()
-                                        : Icon(
-                                            MaterialIcons
-                                                .published_with_changes,
-                                            size: 20,
-                                            color: MyTheme.redcolortext,
-                                          ),
+                                    child: Icon(
+                                      MaterialIcons.published_with_changes,
+                                      size: 20,
+                                      color: MyTheme.redcolortext,
+                                    ),
                                   )
                                 ],
                               )))
                     ],
                   )
-                : (uiset.auto == false &&
-                        Hive.box('user_setting').get('isfinished') == true
-                    ? Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          ContainerDesign(
-                              color: draw.backgroundcolor,
-                              child: SizedBox(
-                                  height: 50,
-                                  width: maxWidth - 20,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Flexible(
-                                          fit: FlexFit.tight,
-                                          child: Text(
-                                            '다음 모델에 이어서 적용하시겠습니까?',
-                                            style: MyTheme.insidecontainerText,
-                                            textAlign: TextAlign.start,
-                                          )),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          //시행
-                                          GetProcess('notauto-start');
-                                          if (Hive.box('user_setting')
-                                              .get('startorstop')) {
-                                            if (uiset.key == 6) {
-                                              uiset.settmpKey(1);
-                                              uiset.setKey(1);
-                                            } else {
-                                              uiset.key = uiset.key + 1;
-                                              uiset.settmpKey(uiset.key);
-                                              uiset.setKey(uiset.key);
-                                            }
-                                            uiset.setdefaulty(0.0);
-                                            uiset.resetinsights();
-                                            uiset.resetlistx();
-                                          } else {}
-                                          Hive.box('user_setting')
-                                              .put('isfinished', false);
-                                        },
-                                        child: Icon(
-                                          MaterialIcons.published_with_changes,
-                                          size: 20,
-                                          color: MyTheme.redcolortext,
-                                        ),
-                                      )
-                                    ],
-                                  )))
-                        ],
-                      )
-                    : const SizedBox());
+                : const SizedBox();
           }),
         ],
       ),
@@ -682,7 +641,6 @@ SummaryModel(context, maxHeight, maxWidth, int key) {
               GestureDetector(
                 onTap: () {
                   uiset.setdbimgshow('');
-                  print(uiset.imgshow);
                 },
                 child: Icon(
                   Ionicons.refresh,
@@ -704,7 +662,8 @@ SummaryModel(context, maxHeight, maxWidth, int key) {
 ///ModelLog
 ///
 ///로그대시보드 UI이다.
-ModelLog(context, maxHeight, maxWidth, ScrollController logscroller) {
+///
+/*ModelLog(context, maxHeight, maxWidth, ScrollController logscroller) {
   return ContainerDesign(
     color: MyTheme.chartcolor,
     child: Column(
@@ -817,7 +776,7 @@ ListShowing(maxHeight, maxWidth, ScrollController logscroller) {
           ],
         );
       }));
-}
+}*/
 
 Imgin(maxHeight, maxWidth) {
   return Flexible(
@@ -844,9 +803,10 @@ Imgin(maxHeight, maxWidth) {
 Notin(maxHeight, maxWidth, string) {
   return Flexible(
       fit: FlexFit.tight,
-      child: SizedBox(
+      child: Container(
         height: maxHeight,
         width: maxWidth,
+        alignment: Alignment.center,
         child: SingleChildScrollView(
           physics: const ScrollPhysics(),
           child: Column(
