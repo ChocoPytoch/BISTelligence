@@ -9,19 +9,7 @@ final List<String> keyitems = [
   'Key5',
   'Key6',
 ];
-final List<String> thresholditems = [
-  '11',
-  '10',
-  '9',
-  '8',
-  '7',
-  '6',
-  '5',
-  '4',
-  '3',
-  '2',
-  '1',
-];
+final List<String> thresholditems = [];
 List<DropdownMenuItem<String>> addDividersAfterItems() {
   List<DropdownMenuItem<String>> _menuItems = [];
   for (var item in keyitems) {
