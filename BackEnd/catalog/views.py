@@ -12,7 +12,8 @@ import numpy as np
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
-import src.evaluate as ev
+#import src.evaluate as ev
+from src.evaluate import ev
 
 BIS_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 
