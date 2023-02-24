@@ -3,10 +3,12 @@
 import pandas as pd
 import joblib
 import warnings
-from pandas.core.internals.blocks import putmask_smart
+# from pandas.core.internals.blocks import putmask_smart
 warnings.filterwarnings(action='ignore')
 
 from sklearn.preprocessing import RobustScaler
+import os, sys
+src_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 def GetData(path:str):
   data=pd.read_csv(path)
@@ -38,7 +40,7 @@ def ImputateData(data):
   X = noisy_data.drop(['key','Vibration_RMS2'],axis=1)
   
   #load linear regression model
-  path='/content/drive/MyDrive/bistelligence/BISTelligence/src/model/saved_model/model_LinearRegression.pkl'
+  path= src_path + '/model/saved_model/model_LinearRegression.pkl'
   lr_model = joblib.load(path)
   y_pred = lr_model.predict(X)
   cp_data.loc[data['Vibration_RMS2']<0, 'Vibration_RMS2'] = y_pred

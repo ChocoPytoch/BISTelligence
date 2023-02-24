@@ -12,8 +12,7 @@ import numpy as np
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
-#import src.evaluate as ev
-from src.evaluate import ev
+import src.evaluate as ev
 
 BIS_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 
@@ -81,10 +80,11 @@ class XaiView(viewsets.ModelViewSet):
         self.threshold = self.user_data["threshold"]
         self.index = self.user_data["index"]
         print("user_data : {}".format(self.user_data))
+        Xai.objects.all().delete()
 
         summary_png, force_png = self.DrawPlot(key=self.key, threshold=self.threshold, index=self.index)
-        Xai.objects.all().delete()
         Xai.objects.create(summary_plot = summary_png, force_plot = force_png)
+        print('model saved in XAI')
 
         self.queryset = Xai.objects.all()
         serializer = self.get_serializer(self.queryset, many=True)
