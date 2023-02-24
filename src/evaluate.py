@@ -201,6 +201,7 @@ def DoXAI(model=None, key_num=1, threshold=0, plot_type=0, sample_index=0):
     plt.savefig(BIS_path+'/'+'src/XAI/plot/{}_key{}_type{}.png'.format(model_name, key_num, plot_type), bbox_inches='tight',
                 pad_inches=0.1)
     plt.show()
+    plt.clf()
 
   # Other Models
   else:
@@ -217,6 +218,7 @@ def DoXAI(model=None, key_num=1, threshold=0, plot_type=0, sample_index=0):
     plt.savefig(BIS_path+'/'+'src/XAI/plot/{}_key{}_type{}.png'.format(model_name, key_num, plot_type), bbox_inches='tight',
                 pad_inches=0.1)
     plt.show()
+    plt.clf()
 
 save_path = BIS_path +'/' +'src/model/saved_model'
 best_path = BIS_path +'/' +'src/model/best_model'

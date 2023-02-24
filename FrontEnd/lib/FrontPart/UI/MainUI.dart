@@ -519,20 +519,34 @@ ShowModelGraph(
                                         if (uiset.imgshow == '' ||
                                             uiset.imgshow == 'sp') {
                                         } else {
-                                          uiset.setdbimgshow('fp');
-                                          uiset.imgurl = '';
-                                          uiset.insightstap.add(modelinsights(
-                                              x: uiset
+                                          if (uiset
                                                   .modelinsightslist[
                                                       pointInteractionDetails
                                                           .pointIndex!]
-                                                  .x,
-                                              y: uiset
-                                                  .modelinsightslist[
-                                                      pointInteractionDetails
-                                                          .pointIndex!]
-                                                  .y));
-                                          await uiset.BackgroundloadImage();
+                                                  .y >
+                                              uiset.defaulty) {
+                                            uiset.setdbimgshow('fp');
+                                            uiset.imgurl = '';
+                                            uiset.insightstap.add(modelinsights(
+                                                x: uiset
+                                                    .modelinsightslist[
+                                                        pointInteractionDetails
+                                                            .pointIndex!]
+                                                    .x,
+                                                y: uiset
+                                                    .modelinsightslist[
+                                                        pointInteractionDetails
+                                                            .pointIndex!]
+                                                    .y));
+                                            await uiset.BackgroundloadImage();
+                                          } else {
+                                            Snack.snackbars(
+                                                context: context,
+                                                title:
+                                                    'Threshold값보다 작은 Health index값은 분석대상이 아닙니다.',
+                                                backgroundcolor:
+                                                    MyTheme.redcolortext);
+                                          }
                                         }
                                       },
                                       xValueMapper: ((data, index) {
