@@ -10,12 +10,10 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../../BackPart/Enum/keyitems.dart';
 import '../../BackPart/Enum/modelinsights.dart';
-//import '../../BackPart/Firebase/Streams.dart';
 import '../../BackPart/Get/drawing.dart';
 import '../../Tools/MyTheme.dart';
 import '../PopUp/Dialog.dart';
@@ -245,8 +243,7 @@ showPopupMenu(context, offset) async {
         value: 0,
         onTap: () async {
           uiset.setdbimgshow('sp');
-          uiset.BackgroundloadImage();
-          //connection.fetchImage();
+          await uiset.BackgroundloadImage();
         },
         child: Row(
           children: [
@@ -371,15 +368,10 @@ ShowModelGraph(
                         onTapDown: (details) {
                           //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
                           if (uiset.key == key) {
-                            if (uiset.imgshow != '') {
-                              Snack.snackbars(
-                                  context: context,
-                                  title: '키값을 변경하는 도중에 분석은 불가합니다!',
-                                  backgroundcolor: MyTheme.redcolortext);
-                            } else {
-                              uiset.imgurl = '';
-                              showPopupMenu(context, details.globalPosition);
-                            }
+                            uiset.setdbimgshow('');
+                            uiset.insightstap.clear();
+                            uiset.status = '';
+                            showPopupMenu(context, details.globalPosition);
                           } else {
                             Snack.snackbars(
                                 context: context,
@@ -388,17 +380,11 @@ ShowModelGraph(
                           }
                         },
                         child: uiset.key == key
-                            ? (uiset.imgshow != ''
-                                ? Icon(
-                                    MaterialIcons.do_not_disturb,
-                                    size: 20,
-                                    color: MyTheme.redcolortext,
-                                  )
-                                : Icon(
-                                    SimpleLineIcons.chart,
-                                    size: 20,
-                                    color: MyTheme.bluecolortext,
-                                  ))
+                            ? Icon(
+                                SimpleLineIcons.chart,
+                                size: 20,
+                                color: MyTheme.bluecolortext,
+                              )
                             : Icon(
                                 MaterialIcons.do_not_disturb,
                                 size: 20,
@@ -546,7 +532,7 @@ ShowModelGraph(
                                                       pointInteractionDetails
                                                           .pointIndex!]
                                                   .y));
-                                          uiset.BackgroundloadImage();
+                                          await uiset.BackgroundloadImage();
                                         }
                                       },
                                       xValueMapper: ((data, index) {
@@ -595,7 +581,10 @@ ShowModelGraph(
                                         uiset.setdefaulty(0.0);
                                         uiset.resetinsights();
                                         uiset.resetlistx();
-                                        uiset.fetchlist();
+                                        uiset.imgurl = '';
+                                        uiset.setdbimgshow('');
+                                        uiset.insightstap.clear();
+                                        uiset.status = '';
                                         refreshchartstream(
                                             chartSeriesController);
                                       } else {}
@@ -808,153 +797,154 @@ Imgin(maxHeight, maxWidth) {
   return Flexible(
       fit: FlexFit.tight,
       child: Container(
-        width: maxWidth,
-        height: maxHeight,
-        alignment: Alignment.center,
-        child: GetBuilder<uisetting>(builder: (_) {
-          return SingleChildScrollView(
+          width: maxWidth,
+          height: maxHeight,
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
               physics: const ScrollPhysics(),
-              child: StreamBuilder(
-                stream: uiset.FetchImage(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.isNotEmpty) {
-                      if (uiset.imgshow == 'sp') {
-                        uiset.imgurl = '';
-                        uiset.imgurl = snapshot.data[0]['summary_plot'];
-                      } else if (uiset.imgshow == 'fp') {
-                        uiset.imgurl = '';
-                        uiset.imgurl = snapshot.data[0]['force_plot'];
+              child: GetBuilder<uisetting>(
+                builder: (_) {
+                  return StreamBuilder(
+                    stream: uiset.FetchImage(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.isNotEmpty) {
+                          if (uiset.imgshow == 'sp') {
+                            uiset.imgurl = '';
+                            uiset.imgurl = snapshot.data[0]['summary_plot'];
+                          } else if (uiset.imgshow == 'fp') {
+                            uiset.imgurl = '';
+                            uiset.imgurl = snapshot.data[0]['force_plot'];
+                          } else {
+                            uiset.imgurl = '';
+                          }
+                          return SizedBox(
+                            height: maxHeight,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  uiset.imgurl,
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          if (uiset.status == 'Bad Request') {
+                            return SizedBox(
+                              width: maxWidth * 0.6,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    AntDesign.frowno,
+                                    color: Colors.red,
+                                    size: 30,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    uiset.status,
+                                    textAlign: TextAlign.center,
+                                    style: MyTheme.insidecontainerText,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    '리셋 버튼을 클릭하여 재시도',
+                                    textAlign: TextAlign.center,
+                                    style: MyTheme.insidecontainerText,
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return SizedBox(
+                              width: maxWidth * 0.6,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: MyTheme.bluecolortext,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    '서버로부터 불러오는 중입니다. 잠시만 기다려주십시오.',
+                                    textAlign: TextAlign.center,
+                                    style: MyTheme.insidecontainerText,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
                       } else {
-                        uiset.imgurl = '';
+                        if (uiset.status == 'Bad Request') {
+                          return SizedBox(
+                            width: maxWidth * 0.6,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  AntDesign.frowno,
+                                  color: Colors.red,
+                                  size: 30,
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  uiset.status,
+                                  textAlign: TextAlign.center,
+                                  style: MyTheme.insidecontainerText,
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  '리셋 버튼을 클릭하여 재시도',
+                                  textAlign: TextAlign.center,
+                                  style: MyTheme.insidecontainerText,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return SizedBox(
+                            width: maxWidth * 0.6,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: MyTheme.bluecolortext,
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  '서버로부터 불러오는 중입니다. 잠시만 기다려주십시오.',
+                                  textAlign: TextAlign.center,
+                                  style: MyTheme.insidecontainerText,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
-                      return SizedBox(
-                        height: maxHeight,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.network(
-                              uiset.imgurl,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      if (uiset.status == 'Bad Request') {
-                        return SizedBox(
-                          width: maxWidth * 0.6,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                AntDesign.frowno,
-                                color: Colors.red,
-                                size: 30,
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                uiset.status,
-                                textAlign: TextAlign.center,
-                                style: MyTheme.insidecontainerText,
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                '리셋 버튼을 클릭하여 재시도',
-                                textAlign: TextAlign.center,
-                                style: MyTheme.insidecontainerText,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return SizedBox(
-                          width: maxWidth * 0.6,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                color: MyTheme.bluecolortext,
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                '서버로부터 불러오는 중입니다. 잠시만 기다려주십시오.',
-                                textAlign: TextAlign.center,
-                                style: MyTheme.insidecontainerText,
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                  } else {
-                    if (uiset.status == 'Bad Request') {
-                      return SizedBox(
-                        width: maxWidth * 0.6,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              AntDesign.frowno,
-                              color: Colors.red,
-                              size: 30,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              uiset.status,
-                              textAlign: TextAlign.center,
-                              style: MyTheme.insidecontainerText,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              '리셋 버튼을 클릭하여 재시도',
-                              textAlign: TextAlign.center,
-                              style: MyTheme.insidecontainerText,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return SizedBox(
-                        width: maxWidth * 0.6,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              color: MyTheme.bluecolortext,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              '서버로부터 불러오는 중입니다. 잠시만 기다려주십시오.',
-                              textAlign: TextAlign.center,
-                              style: MyTheme.insidecontainerText,
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }
+                    },
+                  );
                 },
-              ));
-        }),
-      ));
+              ))));
 }
 
 Notin(maxHeight, maxWidth, string) {

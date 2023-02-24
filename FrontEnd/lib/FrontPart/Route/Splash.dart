@@ -10,6 +10,6 @@ import 'mainroute.dart';
 ///현재는 임의로 3초로 설정.
 GoToMain() {
   Timer(const Duration(seconds: 3), () {
-    Get.offNamed('/home');
+    Get.to(() => const mainroute(), transition: Transition.fade);
   });
 }

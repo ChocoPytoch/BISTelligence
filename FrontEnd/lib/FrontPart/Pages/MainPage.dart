@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../BackPart/Enum/modelinsights.dart';
 import '../../BackPart/Get/drawing.dart';
 import '../../BackPart/Get/uisetting.dart';
 import '../../Tools/AppbarCustom.dart';

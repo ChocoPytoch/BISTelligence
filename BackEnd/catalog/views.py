@@ -62,7 +62,6 @@ class XaiView(viewsets.ModelViewSet):
     def DrawPlot(self, key=1, threshold=1, index=0):
         model_name = "LOF"
         ev.SetData(scaled = True, key_num = key)
-        
         model = ev.LoadModel(model_name,BIS_path + '/'+'src/model/best_model',key_num = key)
 
         ev.DoXAI(model, key_num = key, threshold=threshold, plot_type=0)
@@ -76,14 +75,13 @@ class XaiView(viewsets.ModelViewSet):
     #url : xai/PlotUpdate/
     @action(detail=False, methods=['GET'])
     def PlotUpdate(self, request):
-        
         self.user_data = request.data
         self.key = self.user_data["key"]
         self.threshold = self.user_data["threshold"]
         self.index = self.user_data["index"]
-        
         print("user_data : {}".format(self.user_data))
         Xai.objects.all().delete()
+
         summary_png, force_png = self.DrawPlot(key=self.key, threshold=self.threshold, index=self.index)
         Xai.objects.create(summary_plot = summary_png, force_plot = force_png)
         print('model saved in XAI')

@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:app/BackPart/Get/drawing.dart';
-import 'package:app/FrontPart/Pages/MainPage.dart';
 import 'package:app/FrontPart/Route/Splash.dart';
 import 'package:app/Tools/MyTheme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,10 +42,6 @@ class MyApp extends StatelessWidget {
           home: const SplashPage(
             title: 'Solution',
           ),
-          initialRoute: '/',
-          getPages: [
-            GetPage(name: '/home', page: () => const MainPage()),
-          ],
         ),
         GetCupertinoApp(
           debugShowCheckedModeBanner: false,
@@ -55,10 +50,6 @@ class MyApp extends StatelessWidget {
           home: const SplashPage(
             title: 'Solution',
           ),
-          initialRoute: '/',
-          getPages: [
-            GetPage(name: '/home', page: () => const MainPage()),
-          ],
         ),
         GetMaterialApp(
           debugShowCheckedModeBanner: false,
@@ -67,10 +58,6 @@ class MyApp extends StatelessWidget {
           home: const SplashPage(
             title: 'Solution',
           ),
-          initialRoute: '/',
-          getPages: [
-            GetPage(name: '/home', page: () => const MainPage()),
-          ],
         ));
   }
 }

@@ -41,12 +41,10 @@ dependencies:
   # Use this dependencies for get data sync.
   get: 
   path_provider: 
-  http: 
   # Use this dependencies for save data in device.
   hive: 
   hive_flutter: 
   hive_listener: 
-  multiple_stream_builder:
   # Use this dependencies for get device size
   responsive_sizer:
   # Use this dependencies for firebase connect

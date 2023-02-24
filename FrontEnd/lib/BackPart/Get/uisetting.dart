@@ -25,6 +25,7 @@ class uisetting extends GetxController {
   bool loading = false;
   String status = '';
   bool bigimg = false;
+  String successconnect = '';
 
   ///setPagenumber
   ///
@@ -80,31 +81,6 @@ class uisetting extends GetxController {
     } else {}
   }
 
-  Stream streamBackgroundloadImage() async* {
-    String starturl = GetPlatform.isWeb
-        ? 'http://localhost:8000/xai/PlotUpdate'
-        : 'http://10.0.2.2:8000/xai/PlotUpdate';
-    var params = imgshow == 'sp'
-        ? {
-            'key': key,
-            'threshold': defaulty,
-            'index': 0,
-          }
-        : {
-            'key': key,
-            'threshold': defaulty,
-            'index': insightstap[0].x,
-          };
-    Response response = await connect.request(starturl, 'get',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Access-Control-Allow-Headers': '*'
-        },
-        body: jsonEncode(params));
-    yield response.body;
-  }
-
   ///BackgroundloadImage
   ///
   ///서버에서 모델로부터 이미지를 저장하게 함
@@ -125,27 +101,36 @@ class uisetting extends GetxController {
           };
     Response response = await connect.request(starturl, 'get',
         headers: <String, String>{
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Access-Control-Allow-Headers': '*'
         },
         body: jsonEncode(params));
-    loading = true;
-    return response.body;
+    update();
+    notifyChildrens();
   }
 
+  ///FetchImage
+  ///
+  ///서버에서 모델로부터 이미지를 불러오게 함
   Stream FetchImage() async* {
     String starturl = GetPlatform.isWeb
         ? 'http://localhost:8000/xai'
         : 'http://10.0.2.2:8000/xai';
     Response response = await connect.get(starturl);
-    response = await connect.get(starturl);
     if (response.statusCode == 200 || response.statusCode == 201) {
       status = '';
     } else if (response.statusCode == 500) {
       status = 'Bad Request';
     }
-    loading = false;
+    if (response.body.isEmpty) {
+      Future.delayed(const Duration(seconds: 2), () {
+        FetchImage();
+        successconnect = 'loading';
+        update();
+        notifyChildrens();
+      });
+    } else {
+      successconnect = 'success';
+    }
     yield response.body;
   }
 

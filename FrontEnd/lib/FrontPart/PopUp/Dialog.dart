@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Tools/ContainerDesign.dart';
 import '../../Tools/Pressed.dart';
-import '../UI/MainUI.dart';
 
 final uiset = Get.put(uisetting());
 
@@ -85,7 +84,6 @@ ModelLogDialog() {
   ));
 }
 
-/*
 StartOrStop() {
   Get.dialog(LayoutBuilder(
     builder: (context, constraint) {
@@ -151,7 +149,7 @@ StartOrStop() {
     },
   ));
 }
-*/
+
 PlotDialog() {
   Get.dialog(LayoutBuilder(
     builder: (context, constraint) {

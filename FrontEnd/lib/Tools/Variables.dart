@@ -6,11 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 var listsummary = [];
 var keynum = [330, 300, 308, 326, 250, 250];
-var iplist = [
-  '10.0.2.2',
-  '10.0.2.16',
-  '127.0.0.1',
-];
+
 //FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseApp mobilever = Firebase.app('Detector');
 FirebaseApp webver = Firebase.app('Detect System');
