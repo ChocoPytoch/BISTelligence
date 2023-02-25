@@ -176,7 +176,7 @@ PlotDialog() {
                     fit: FlexFit.tight,
                     child: SingleChildScrollView(
                       child: Text(
-                        '원인분석을 하고자 하는 구간선택을 하셔야 합니다. 확인 버튼을 클릭하시고 메인 대시보드에서 구간을 클릭하실 수 있습니다.',
+                        '원인분석을 하고자 하는 관측치 선택을 하셔야 합니다. 확인 버튼을 클릭하시고 메인 대시보드에서 관측치를 클릭하실 수 있습니다.',
                         style: MyTheme.smallcontentText,
                         textAlign: TextAlign.start,
                       ),
