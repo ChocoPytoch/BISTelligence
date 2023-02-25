@@ -369,7 +369,6 @@ ShowModelGraph(
                           //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
                           if (uiset.key == key) {
                             uiset.setdbimgshow('');
-                            uiset.insightstap.clear();
                             uiset.status = '';
                             showPopupMenu(context, details.globalPosition);
                           } else {
@@ -519,20 +518,34 @@ ShowModelGraph(
                                         if (uiset.imgshow == '' ||
                                             uiset.imgshow == 'sp') {
                                         } else {
-                                          uiset.setdbimgshow('fp');
-                                          uiset.imgurl = '';
-                                          uiset.insightstap.add(modelinsights(
-                                              x: uiset
+                                          if (uiset
                                                   .modelinsightslist[
                                                       pointInteractionDetails
                                                           .pointIndex!]
-                                                  .x,
-                                              y: uiset
-                                                  .modelinsightslist[
-                                                      pointInteractionDetails
-                                                          .pointIndex!]
-                                                  .y));
-                                          await uiset.BackgroundloadImage();
+                                                  .y >
+                                              uiset.defaulty) {
+                                            uiset.setdbimgshow('fp');
+                                            uiset.imgurl = '';
+                                            uiset.insightstap.add(modelinsights(
+                                                x: uiset
+                                                    .modelinsightslist[
+                                                        pointInteractionDetails
+                                                            .pointIndex!]
+                                                    .x,
+                                                y: uiset
+                                                    .modelinsightslist[
+                                                        pointInteractionDetails
+                                                            .pointIndex!]
+                                                    .y));
+                                            await uiset.BackgroundloadImage();
+                                          } else {
+                                            Snack.snackbars(
+                                                context: context,
+                                                title:
+                                                    'Threshold값보다 작은 Health index값은 분석대상이 아닙니다.',
+                                                backgroundcolor:
+                                                    MyTheme.redcolortext);
+                                          }
                                         }
                                       },
                                       xValueMapper: ((data, index) {
@@ -583,7 +596,6 @@ ShowModelGraph(
                                         uiset.resetlistx();
                                         uiset.imgurl = '';
                                         uiset.setdbimgshow('');
-                                        uiset.insightstap.clear();
                                         uiset.status = '';
                                         refreshchartstream(
                                             chartSeriesController);
@@ -654,7 +666,6 @@ SummaryModel(context, maxHeight, maxWidth, int key) {
                 onTap: () {
                   uiset.imgurl = '';
                   uiset.setdbimgshow('');
-                  uiset.insightstap.clear();
                   uiset.status = '';
                 },
                 child: Icon(

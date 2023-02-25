@@ -140,7 +140,7 @@ def ShowHealthIndex(model = None, anomaly_score = None, scaled = True, key_num =
   plt.title('{} health index in key {} '.format(model_name, key_num ,scaled), fontsize = 25)
 
 
-def DoXAI(model=None, key_num=1, threshold=0, plot_type=0, sample_index=0):
+def DoXAI(model=None, key_num=1, threshold=0, plot_type=0, sample_index=-1):
   '''
   input
   - model
@@ -171,52 +171,65 @@ def DoXAI(model=None, key_num=1, threshold=0, plot_type=0, sample_index=0):
                                                           autoencoder=model,
                                                           return_shap_values=True)
 
-    print(shap_values_all)
-
     if plot_type == 0:
       col = shap_values_all.sum().sort_values().index[0]
       shap_values_all.drop([col], axis=1, inplace=True)
       shap.summary_plot(shap_values_all.values, shap_values_all.columns, plot_type="bar", show=False)
-      plt.title('{} summary_plot about {} in key{}'.format(model_name, col, key_num), fontsize=20)
-
+      plt.suptitle('The most important feature : {}'.format(col), x=0.6, y=1.03, fontsize=12)
+      plt.title('{} summary_plot about {} in key{}\n'.format(model_name, col, key_num), fontsize=20)
+      
 
     elif plot_type == 1:
-      shap_values = shap_values_all.iloc[sample_index]
-      col = shap_values[shap_values == -1].index
-      shap_values.drop(col, inplace=True)
-      print(shap_values.index)
-      reconstruction = pd.DataFrame(model.predict(train_data), columns=train_data.columns)
+      if(sample_index==-1):
+        pass
+      idx_of_sample_index = list(shap_values_all.index).index(sample_index)
+      shap_values = shap_values_all.copy(deep=True).iloc[idx_of_sample_index]
+      col = shap_values[shap_values == -1].index.values
+      shap_values.drop([col[0]], inplace=True)
+      
+      train_data_200 = train_data[:200].copy(deep=True)
+      reconstruction = pd.DataFrame(model.predict(train_data_200), columns=train_data_200.columns)
 
       # mse 가장 큰(shap value 정확하지 않은) 변수 제거 후 expected value 계산
-      train_data.drop(col, axis=1, inplace=True)
+      train_data_200.drop(col, axis=1, inplace=True)
       reconstruction.drop(col, axis=1, inplace=True)
-      error = np.mean(np.power(train_data - reconstruction, 2), axis=1)
+      error = np.mean(np.power(train_data_200 - reconstruction, 2), axis=1)
       expected_value = np.mean(error)
 
       shap.force_plot(expected_value, shap_values=shap_values.values, feature_names=shap_values.index, show=False,
                       matplotlib=True)
-      plt.title('{} force_plot about {} in key{}'.format(model_name, col[0], key_num), fontsize=20)
+      plt.suptitle('The most important feature : {}'.format(col[0]), x=0.5, y=1.03, fontsize=12)
+      plt.title('{} force_plot in key{} (index.{})\n'.format(model_name, key_num, sample_index), fontsize=19)
+      
 
     plt.gcf().subplots_adjust(bottom=0.2)
     plt.savefig(BIS_path+'/'+'src/XAI/plot/{}_key{}_type{}.png'.format(model_name, key_num, plot_type), bbox_inches='tight',
                 pad_inches=0.1)
     plt.show()
+    plt.clf()
+
 
   # Other Models
   else:
     score = GetAnomalyScore(model)
     shap_values_all, explainer = xx.OtherModelSHAP(model).novelty_contribution(train_data, test_data, score, threshold)
+
     if plot_type == 0:
       shap.summary_plot(shap_values_all.values, shap_values_all.columns, plot_type="bar", show=False)
       plt.title('{} summary_plot in key{}'.format(model_name, key_num), fontsize=20)
     elif plot_type == 1:
-      shap.force_plot(explainer.expected_value, shap_values=shap_values_all.values[0],
+      if(sample_index==-1):
+        pass
+      idx_of_sample_index = list(shap_values_all.index).index(sample_index)
+      shap.force_plot(explainer.expected_value, shap_values=shap_values_all.values[idx_of_sample_index],
                       feature_names=shap_values_all.columns, show=False, matplotlib=True)
-      plt.title('{} force_plot in key{}'.format(model_name, key_num), fontsize=20)
+      plt.title('{} force_plot in key{} (index.{})'.format(model_name, key_num, sample_index), fontsize=20)
     plt.gcf().subplots_adjust(bottom=0.2)
     plt.savefig(BIS_path+'/'+'src/XAI/plot/{}_key{}_type{}.png'.format(model_name, key_num, plot_type), bbox_inches='tight',
                 pad_inches=0.1)
     plt.show()
+    plt.clf()
+
 
 save_path = BIS_path +'/' +'src/model/saved_model'
 best_path = BIS_path +'/' +'src/model/best_model'
