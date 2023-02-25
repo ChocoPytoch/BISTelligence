@@ -94,7 +94,7 @@ class uisetting extends GetxController {
         ? {
             'key': key,
             'threshold': defaulty,
-            'index': modelinsightslist.length - 1,
+            'index': keynum[key - 1] - 1,
           }
         : {
             'key': key,
