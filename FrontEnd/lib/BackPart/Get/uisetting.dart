@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:app/BackPart/Enum/keyitems.dart';
+import 'package:app/Tools/Variables.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../Enum/modelinsights.dart';
@@ -92,7 +94,7 @@ class uisetting extends GetxController {
         ? {
             'key': key,
             'threshold': defaulty,
-            'index': 0,
+            'index': modelinsightslist.length - 1,
           }
         : {
             'key': key,

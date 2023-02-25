@@ -369,7 +369,6 @@ ShowModelGraph(
                           //uiset.key가 key와 동일한 경우에만 터치이벤트 실행
                           if (uiset.key == key) {
                             uiset.setdbimgshow('');
-                            uiset.insightstap.clear();
                             uiset.status = '';
                             showPopupMenu(context, details.globalPosition);
                           } else {
@@ -597,7 +596,6 @@ ShowModelGraph(
                                         uiset.resetlistx();
                                         uiset.imgurl = '';
                                         uiset.setdbimgshow('');
-                                        uiset.insightstap.clear();
                                         uiset.status = '';
                                         refreshchartstream(
                                             chartSeriesController);
@@ -668,7 +666,6 @@ SummaryModel(context, maxHeight, maxWidth, int key) {
                 onTap: () {
                   uiset.imgurl = '';
                   uiset.setdbimgshow('');
-                  uiset.insightstap.clear();
                   uiset.status = '';
                 },
                 child: Icon(
