@@ -59,17 +59,17 @@ We have proceeded with the deployment process through the Flutter framework base
 ## Contributors
 
 Here is the list of
-[contributors](https://github.com/ChocoPytorch/BISTelligence/graphs/contributors)
+[contributors](https://github.com/ChocoPytoch/BISTelligence/graphs/contributors)
 who participated in this project.
 
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Chocopytorch"><img src="https://avatars.githubusercontent.com/u/122209595?v=4?s=100" width="100px;" alt="Chocopytorch"/><br /><sub><b>Chocopytorch</b></sub></a><br /><a href="https://github.com/Chocopytorch/BISTelligence/commits?author=Chocopytorch" title="Commits">📖</a> </td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/chosungsu"><img src="https://avatars.githubusercontent.com/u/48382347?v=4?s=100" width="100px;" alt="chosungsu"/><br /><sub><b>chosungsu</b></sub></a><br /><a href="https://github.com/Chocopytorch/BISTelligence/commits?author=chosungsu" title="Commits">📖</a> </td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kmw4097"><img src="https://avatars.githubusercontent.com/u/98750892?v=4?s=100" width="100px;" alt="kmw4097"/><br /><sub><b>kmw4097</b></sub></a><br /><a href="https://github.com/Chocopytorch/BISTelligence/commits?author=kmw4097" title="Commits">📖</a> </td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dbnub"><img src="https://avatars.githubusercontent.com/u/99518647?v=4?s=100" width="100px;" alt="dbnub"/><br /><sub><b>dbnub</b></sub></a><br /><a href="https://github.com/Chocopytorch/BISTelligence/commits?author=dbnub" title="Commits">📖</a> </td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/choiyongwoo"><img src="https://avatars.githubusercontent.com/u/50268222?v=4?s=100" width="100px;" alt="choiyongwoo"/><br /><sub><b>choiyongwoo</b></sub></a><br /><a href="https://github.com/Chocopytorch/BISTelligence/commits?author=choiyongwoo" title="Commits">📖</a> </td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChocoPytoch"><img src="https://avatars.githubusercontent.com/u/122209595?v=4?s=100" width="100px;" alt="Chocopytorch"/><br /><sub><b>Chocopytorch</b></sub></a><br /><a href="https://github.com/ChocoPytoch/BISTelligence/commits?author=Chocopytorch" title="Commits">📖</a> </td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/chosungsu"><img src="https://avatars.githubusercontent.com/u/48382347?v=4?s=100" width="100px;" alt="chosungsu"/><br /><sub><b>chosungsu</b></sub></a><br /><a href="https://github.com/ChocoPytoch/BISTelligence/commits?author=chosungsu" title="Commits">📖</a> </td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kmw4097"><img src="https://avatars.githubusercontent.com/u/98750892?v=4?s=100" width="100px;" alt="kmw4097"/><br /><sub><b>kmw4097</b></sub></a><br /><a href="https://github.com/ChocoPytoch/BISTelligence/commits?author=kmw4097" title="Commits">📖</a> </td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dbnub"><img src="https://avatars.githubusercontent.com/u/99518647?v=4?s=100" width="100px;" alt="dbnub"/><br /><sub><b>dbnub</b></sub></a><br /><a href="https://github.com/ChocoPytoch/BISTelligence/commits?author=dbnub" title="Commits">📖</a> </td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/choiyongwoo"><img src="https://avatars.githubusercontent.com/u/50268222?v=4?s=100" width="100px;" alt="choiyongwoo"/><br /><sub><b>choiyongwoo</b></sub></a><br /><a href="https://github.com/ChocoPytoch/BISTelligence/commits?author=choiyongwoo" title="Commits">📖</a> </td>
     </tr>
   </tbody>
 </table>
